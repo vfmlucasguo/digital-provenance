@@ -1,0 +1,7 @@
+{
+  "name": "digital-provenance",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
