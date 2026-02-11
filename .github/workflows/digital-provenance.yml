@@ -1,10 +1,11 @@
-name: AI Digital Provenance (Simplified & Automated)
+name: AI Digital Provenance (Full Repository & Simplified)
 
 on:
   push:
     branches: [ main, develop ]
+    # 移除了特定路径过滤，现在监听项目根目录下的所有文件变动
     paths:
-      - 'src/**' # 仅在源码变动时触发，节省资源
+      - '**'
   pull_request:
     branches: [ main ]
 
@@ -13,6 +14,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    # 1. 基础环境设置
     - name: Checkout code
       uses: actions/checkout@v4
       with:
@@ -23,27 +25,29 @@ jobs:
       with:
         python-version: '3.9'
 
-    # 1. 安装核心工具 (移除 Cosign)
+    # 2. 安装核心工具 (已移除 Cosign 安装步骤)
     - name: Install Syft (SBOM Generator)
       run: |
         curl -sSfL https://raw.githubusercontent.com/anchore/syft/main/install.sh | sh -s -- -b /usr/local/bin
         echo "📦 Syft installed for SBOM generation"
 
-    # 2. AI数字溯源核心流程
+    # 3. AI 数字溯源核心流程
     - name: Generate Base SBOM
       run: |
         echo "📦 Generating Software Bill of Materials..."
+        # 使用 Syft 扫描项目并生成基础 JSON 清单
         syft . -o cyclonedx-json > base-sbom.json
         COMPONENT_COUNT=$(jq '.components | length' base-sbom.json)
         echo "✅ SBOM generated with $COMPONENT_COUNT components"
         echo "COMPONENT_COUNT=$COMPONENT_COUNT" >> $GITHUB_ENV
 
-    - name: AI Code Detection & Statistics
+    - name: AI Code Detection & Full Range Statistics
       run: |
-        echo "🤖 Running full-range AI code detection in src/..."
+        echo "🤖 Running AI code detection and statistics in src/..."
+        # 运行 Python 脚本进行全域代码行数统计与 AI 标记
         python3 scripts/process_aibom.py
 
-        # 匹配脚本生成的最新统计字段
+        # 使用 jq 从生成的 aibom-final.json 中提取量化指标
         AI_LINES=$(jq -r '.metadata.properties[] | select(.name=="stats:ai_total_lines") | .value' aibom-final.json)
         AI_PCT=$(jq -r '.metadata.properties[] | select(.name=="stats:ai_percentage") | .value' aibom-final.json)
         TOTAL_LINES=$(jq -r '.metadata.properties[] | select(.name=="stats:src_total_lines") | .value' aibom-final.json)
@@ -53,11 +57,12 @@ jobs:
         echo "  - AI Generated Lines: $AI_LINES"
         echo "  - AI Percentage: $AI_PCT"
 
+        # 将结果存入环境变量供后续步骤使用
         echo "AI_LINES=$AI_LINES" >> $GITHUB_ENV
         echo "AI_PCT=$AI_PCT" >> $GITHUB_ENV
         echo "TOTAL_LINES=$TOTAL_LINES" >> $GITHUB_ENV
 
-    # 3. 保存 AI 溯源结果 (仅保留核心 AIBOM)
+    # 4. 保存 AI 溯源结果 (仅保留核心 AIBOM，移除签名文件)
     - name: Upload AI Provenance Artifact
       uses: actions/upload-artifact@v4
       with:
@@ -65,26 +70,26 @@ jobs:
         path: aibom-final.json
         retention-days: 30
 
-    # 4. 生成 AI 溯源摘要 (展示在 GitHub Action 界面)
+    # 5. 在 GitHub Action 界面生成可视化摘要
     - name: Generate AI Provenance Summary
       run: |
-        echo "## 🤖 AI数字溯源报告 (全域统计)" >> $GITHUB_STEP_SUMMARY
+        echo "## 🤖 AI 数字溯源报告 (全域统计)" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
         echo "### 📊 src/ 目录量化指标" >> $GITHUB_STEP_SUMMARY
         echo "- **项目总行数**: $TOTAL_LINES" >> $GITHUB_STEP_SUMMARY
         echo "- **AI 生成行数**: $AI_LINES" >> $GITHUB_STEP_SUMMARY
         echo "- **AI 代码占比**: $AI_PCT" >> $GITHUB_STEP_SUMMARY
-        echo "- **组件总数 (SBOM)**: $COMPONENT_COUNT" >> $GITHUB_STEP_SUMMARY
+        echo "- **依赖组件总数**: $COMPONENT_COUNT" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
         if [ "$AI_LINES" -ne "0" ]; then
-          echo "⚠️ 检测到AI生成的代码，已在 AIBOM 中自动标记" >> $GITHUB_STEP_SUMMARY
+          echo "⚠️ 检测到 AI 生成的代码，已在 aibom-final.json 中自动标记" >> $GITHUB_STEP_SUMMARY
         else
-          echo "✅ 未检测到 AI 标注的代码" >> $GITHUB_STEP_SUMMARY
+          echo "✅ 本次提交未检测到 AI 标注的代码" >> $GITHUB_STEP_SUMMARY
         fi
         echo "" >> $GITHUB_STEP_SUMMARY
-        echo "*🎯 AI数字溯源系统 - 确保代码透明度和可追溯性*" >> $GITHUB_STEP_SUMMARY
+        echo "*🎯 AI 数字溯源系统 - 确保代码透明度和可追溯性*" >> $GITHUB_STEP_SUMMARY
 
-    # 5. PR 中的 AI 变更分析 (仅 PR 触发)
+    # 6. 针对 Pull Request 的 AI 变更分析
     - name: Comment PR with AI Analysis
       if: github.event_name == 'pull_request'
       uses: actions/github-script@v7
@@ -92,7 +97,7 @@ jobs:
         script: |
           const aiPct = process.env.AI_PCT;
           const aiLines = process.env.AI_LINES;
-          const body = `## 🤖 AI 代码透明度分析\n\n本次变更检测到 AI 代码渗透率为 **${aiPct}** (${aiLines} 行)。\n\n---\n*由 AI 数字溯源系统自动生成*`;
+          const body = `## 🤖 AI 代码透明度分析\n\n本次变更检测到 AI 代码渗透率为 **${aiPct}** (共 ${aiLines} 行)。\n\n---\n*由 AI 数字溯源系统自动生成*`;
           await github.rest.issues.createComment({
             issue_number: context.issue.number,
             owner: context.repo.owner,

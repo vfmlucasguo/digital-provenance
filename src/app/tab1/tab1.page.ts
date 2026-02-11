@@ -10,8 +10,8 @@ export class Tab1Page {
 
   constructor() {}
   // @ai-generated
-  ngOnInit() {
-    console.log('Tab1Page ngOnInit');
+  ngOnChanges() {
+    console.log('Tab1Page ngOnChanges');
   }
 
 }
