@@ -23,36 +23,20 @@
     },
     "properties": [
       {
-        "name": "ai:platform",
-        "value": "Local-AI-Native-Flow"
-      },
-      {
-        "name": "ai:local_build_time",
-        "value": "2026-02-11T11:33:54.204011"
-      },
-      {
-        "name": "ai:git_commit",
-        "value": "ccd0f095fefa1a588d52f9ceda0ebb1bf57d178d"
-      },
-      {
-        "name": "ai:git_branch",
-        "value": "main"
-      },
-      {
-        "name": "ai:detection_version",
-        "value": "2.0"
-      },
-      {
-        "name": "ai:detected_files",
+        "name": "stats:src_total_lines",
         "value": "0"
       },
       {
-        "name": "ai:detection_indicators",
+        "name": "stats:ai_total_lines",
         "value": "0"
       },
       {
-        "name": "ai:marked_components",
-        "value": "0"
+        "name": "stats:ai_percentage",
+        "value": "0%"
+      },
+      {
+        "name": "build:scan_time",
+        "value": "2026-02-11T14:55:42.515883"
       }
     ]
   },
