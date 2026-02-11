@@ -1,8 +1,10 @@
-name: AI Digital Provenance (Simplified)
+name: AI Digital Provenance (Simplified & Automated)
 
 on:
   push:
     branches: [ main, develop ]
+    paths:
+      - 'src/**' # 仅在源码变动时触发，节省资源
   pull_request:
     branches: [ main ]
 
@@ -11,149 +13,89 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    # 1. 基础环境设置
     - name: Checkout code
       uses: actions/checkout@v4
       with:
         fetch-depth: 0
 
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
+    - name: Set up Python
+      uses: actions/setup-python@v4
       with:
-        node-version: '18'
-        cache: 'npm'
+        python-version: '3.9'
 
-    - name: Install dependencies
-      run: npm ci
-
-    # 2. 安装核心工具 (仅AI溯源必需)
+    # 1. 安装核心工具 (移除 Cosign)
     - name: Install Syft (SBOM Generator)
       run: |
         curl -sSfL https://raw.githubusercontent.com/anchore/syft/main/install.sh | sh -s -- -b /usr/local/bin
         echo "📦 Syft installed for SBOM generation"
 
-    - name: Install Cosign (Digital Signing)
-      uses: sigstore/cosign-installer@v3
-      with:
-        cosign-release: 'v2.2.0'
-
-    # 3. AI数字溯源核心流程
+    # 2. AI数字溯源核心流程
     - name: Generate Base SBOM
       run: |
         echo "📦 Generating Software Bill of Materials..."
         syft . -o cyclonedx-json > base-sbom.json
-
         COMPONENT_COUNT=$(jq '.components | length' base-sbom.json)
         echo "✅ SBOM generated with $COMPONENT_COUNT components"
         echo "COMPONENT_COUNT=$COMPONENT_COUNT" >> $GITHUB_ENV
 
-    - name: AI Code Detection
+    - name: AI Code Detection & Statistics
       run: |
-        echo "🤖 Running AI code detection..."
+        echo "🤖 Running full-range AI code detection in src/..."
         python3 scripts/process_aibom.py
 
-        AI_FILES=$(jq -r '.metadata.properties[] | select(.name=="ai:detected_files") | .value' aibom-final.json)
-        AI_INDICATORS=$(jq -r '.metadata.properties[] | select(.name=="ai:detection_indicators") | .value' aibom-final.json)
+        # 匹配脚本生成的最新统计字段
+        AI_LINES=$(jq -r '.metadata.properties[] | select(.name=="stats:ai_total_lines") | .value' aibom-final.json)
+        AI_PCT=$(jq -r '.metadata.properties[] | select(.name=="stats:ai_percentage") | .value' aibom-final.json)
+        TOTAL_LINES=$(jq -r '.metadata.properties[] | select(.name=="stats:src_total_lines") | .value' aibom-final.json)
 
-        echo "🔍 AI Detection Results:"
-        echo "  - AI Generated Files: $AI_FILES"
-        echo "  - Detection Indicators: $AI_INDICATORS"
+        echo "🔍 AI Statistics Results:"
+        echo "  - Total Lines in src/: $TOTAL_LINES"
+        echo "  - AI Generated Lines: $AI_LINES"
+        echo "  - AI Percentage: $AI_PCT"
 
-        echo "AI_FILES=$AI_FILES" >> $GITHUB_ENV
-        echo "AI_INDICATORS=$AI_INDICATORS" >> $GITHUB_ENV
+        echo "AI_LINES=$AI_LINES" >> $GITHUB_ENV
+        echo "AI_PCT=$AI_PCT" >> $GITHUB_ENV
+        echo "TOTAL_LINES=$TOTAL_LINES" >> $GITHUB_ENV
 
-    - name: Setup Digital Signing
-      env:
-        COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
-        COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
-      run: |
-        echo "🔑 Setting up digital signing..."
-        echo "$COSIGN_PRIVATE_KEY" > cosign.key
-        chmod 600 cosign.key
-
-    - name: Sign AI-Enhanced SBOM
-      env:
-        COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
-      run: |
-        echo "🔏 Signing AI-enhanced SBOM..."
-        cosign sign-blob --key cosign.key --bundle aibom.sigstore.json aibom-final.json
-        echo "✅ Digital signature created"
-
-    - name: Verify Digital Signature
-      run: |
-        echo "✅ Verifying digital signature..."
-        cosign verify-blob --key cosign.pub --bundle aibom.sigstore.json aibom-final.json
-        echo "🎯 Signature verification successful"
-
-    # 4. 保存AI溯源结果
-    - name: Upload AI Provenance Artifacts
+    # 3. 保存 AI 溯源结果 (仅保留核心 AIBOM)
+    - name: Upload AI Provenance Artifact
       uses: actions/upload-artifact@v4
       with:
-        name: ai-provenance-${{ github.sha }}
-        path: |
-          base-sbom.json
-          aibom-final.json
-          aibom.sigstore.json
-        retention-days: 90
+        name: ai-provenance-report-${{ github.sha }}
+        path: aibom-final.json
+        retention-days: 30
 
-    # 5. 生成AI溯源摘要
+    # 4. 生成 AI 溯源摘要 (展示在 GitHub Action 界面)
     - name: Generate AI Provenance Summary
       run: |
-        echo "## 🤖 AI数字溯源报告" >> $GITHUB_STEP_SUMMARY
+        echo "## 🤖 AI数字溯源报告 (全域统计)" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
-        echo "### 📊 扫描结果" >> $GITHUB_STEP_SUMMARY
-        echo "- **总组件数**: $COMPONENT_COUNT" >> $GITHUB_STEP_SUMMARY
-        echo "- **AI生成文件**: $AI_FILES 个" >> $GITHUB_STEP_SUMMARY
-        echo "- **检测指标**: $AI_INDICATORS 个" >> $GITHUB_STEP_SUMMARY
-        echo "- **数字签名**: ✅ 已验证" >> $GITHUB_STEP_SUMMARY
+        echo "### 📊 src/ 目录量化指标" >> $GITHUB_STEP_SUMMARY
+        echo "- **项目总行数**: $TOTAL_LINES" >> $GITHUB_STEP_SUMMARY
+        echo "- **AI 生成行数**: $AI_LINES" >> $GITHUB_STEP_SUMMARY
+        echo "- **AI 代码占比**: $AI_PCT" >> $GITHUB_STEP_SUMMARY
+        echo "- **组件总数 (SBOM)**: $COMPONENT_COUNT" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
-        echo "### 🔍 AI透明度" >> $GITHUB_STEP_SUMMARY
-        if [ "$AI_FILES" -gt "0" ]; then
-          echo "⚠️ 检测到AI生成的代码文件，已自动标记在SBOM中" >> $GITHUB_STEP_SUMMARY
+        if [ "$AI_LINES" -ne "0" ]; then
+          echo "⚠️ 检测到AI生成的代码，已在 AIBOM 中自动标记" >> $GITHUB_STEP_SUMMARY
         else
-          echo "✅ 未检测到AI生成的代码文件" >> $GITHUB_STEP_SUMMARY
+          echo "✅ 未检测到 AI 标注的代码" >> $GITHUB_STEP_SUMMARY
         fi
-        echo "" >> $GITHUB_STEP_SUMMARY
-        echo "### 📁 溯源文件" >> $GITHUB_STEP_SUMMARY
-        echo "- 基础SBOM: \`base-sbom.json\`" >> $GITHUB_STEP_SUMMARY
-        echo "- AI增强SBOM: \`aibom-final.json\`" >> $GITHUB_STEP_SUMMARY
-        echo "- 数字签名: \`aibom.sigstore.json\`" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
         echo "*🎯 AI数字溯源系统 - 确保代码透明度和可追溯性*" >> $GITHUB_STEP_SUMMARY
 
-    # 6. PR中的AI变更分析 (仅PR触发)
-    - name: AI Code Changes Analysis (PR only)
-      if: github.event_name == 'pull_request'
-      run: |
-        echo "🔍 Analyzing AI code changes in this PR..."
-
-        # 检查是否有新的AI生成文件
-        git diff --name-only origin/${{ github.base_ref }}...HEAD | grep -E "(ai-gen|generated)" || echo "No AI-specific file changes detected"
-
-        # 简单的AI代码变更提示
-        if [ "$AI_FILES" -gt "0" ]; then
-          echo "⚠️ This PR contains AI-generated code that has been automatically detected and marked in the SBOM" >> pr-comment.md
-          echo "" >> pr-comment.md
-          echo "**AI Transparency Report:**" >> pr-comment.md
-          echo "- AI Generated Files: $AI_FILES" >> pr-comment.md
-          echo "- Detection Confidence: High" >> pr-comment.md
-          echo "- Digital Signature: ✅ Verified" >> pr-comment.md
-        else
-          echo "✅ No AI-generated code detected in this PR" >> pr-comment.md
-        fi
-
+    # 5. PR 中的 AI 变更分析 (仅 PR 触发)
     - name: Comment PR with AI Analysis
       if: github.event_name == 'pull_request'
       uses: actions/github-script@v7
       with:
         script: |
-          const fs = require('fs');
-          if (fs.existsSync('pr-comment.md')) {
-            const comment = fs.readFileSync('pr-comment.md', 'utf8');
-            await github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: `## 🤖 AI代码透明度分析\n\n${comment}\n\n---\n*由AI数字溯源系统自动生成*`
-            });
-          }
+          const aiPct = process.env.AI_PCT;
+          const aiLines = process.env.AI_LINES;
+          const body = `## 🤖 AI 代码透明度分析\n\n本次变更检测到 AI 代码渗透率为 **${aiPct}** (${aiLines} 行)。\n\n---\n*由 AI 数字溯源系统自动生成*`;
+          await github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: body
+          });
