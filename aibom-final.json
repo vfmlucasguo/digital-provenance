@@ -23,20 +23,44 @@
     },
     "properties": [
       {
+        "name": "ai:platform",
+        "value": "Ionic-Universal-Flow"
+      },
+      {
         "name": "stats:src_total_lines",
-        "value": "0"
+        "value": "598"
       },
       {
         "name": "stats:ai_total_lines",
+        "value": "3"
+      },
+      {
+        "name": "stats:ai_whole_file_lines",
         "value": "0"
       },
       {
+        "name": "stats:ai_partial_lines",
+        "value": "3"
+      },
+      {
         "name": "stats:ai_percentage",
-        "value": "0%"
+        "value": "0.5%"
+      },
+      {
+        "name": "stats:whole_files_count",
+        "value": "0"
+      },
+      {
+        "name": "stats:partial_files_count",
+        "value": "1"
+      },
+      {
+        "name": "stats:src_files_scanned",
+        "value": "44"
       },
       {
         "name": "build:scan_time",
-        "value": "2026-02-11T15:09:52.621261"
+        "value": "2026-02-11T15:41:04.744441"
       }
     ]
   },
@@ -3133,6 +3157,24 @@
         {
           "alg": "SHA-256",
           "content": "deaa172a59caa37a07bf758bfa8bcc3a65a0d7ac40722b45b18a27740f724dcb"
+        }
+      ]
+    },
+    {
+      "type": "file",
+      "name": "src/app/tab1/tab1.page.ts",
+      "properties": [
+        {
+          "name": "ai:generated",
+          "value": "true"
+        },
+        {
+          "name": "ai:scope",
+          "value": "partial"
+        },
+        {
+          "name": "ai:lines",
+          "value": "3"
         }
       ]
     }
