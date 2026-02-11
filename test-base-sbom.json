@@ -2,10 +2,10 @@
   "$schema": "http://cyclonedx.org/schema/bom-1.6.schema.json",
   "bomFormat": "CycloneDX",
   "specVersion": "1.6",
-  "serialNumber": "urn:uuid:f70002fe-1679-4949-8f74-0f37e6b304de",
+  "serialNumber": "urn:uuid:7b178c62-6b2d-420f-957a-31da9ceab111",
   "version": 1,
   "metadata": {
-    "timestamp": "2026-02-11T09:22:58+08:00",
+    "timestamp": "2026-02-11T09:59:22+08:00",
     "tools": {
       "components": [
         {
@@ -20,41 +20,7 @@
       "bom-ref": "af63bd4c8601b7f1",
       "type": "file",
       "name": "."
-    },
-    "properties": [
-      {
-        "name": "ai:platform",
-        "value": "Local-AI-Native-Flow"
-      },
-      {
-        "name": "ai:local_build_time",
-        "value": "2026-02-11T11:09:00.714741"
-      },
-      {
-        "name": "ai:git_commit",
-        "value": "b8f5f98020f84942e7efc9de7c8aecc938d9f649"
-      },
-      {
-        "name": "ai:git_branch",
-        "value": "main"
-      },
-      {
-        "name": "ai:detection_version",
-        "value": "2.0"
-      },
-      {
-        "name": "ai:detected_files",
-        "value": "0"
-      },
-      {
-        "name": "ai:detection_indicators",
-        "value": "0"
-      },
-      {
-        "name": "ai:marked_components",
-        "value": "0"
-      }
-    ]
+    }
   },
   "components": [
     {
@@ -1588,6 +1554,32 @@
       ]
     },
     {
+      "bom-ref": "pkg:github/actions/checkout@v4?package-id=ad49e6c575f6efeb",
+      "type": "library",
+      "name": "actions/checkout",
+      "version": "v4",
+      "cpe": "cpe:2.3:a:actions\\/checkout:actions\\/checkout:v4:*:*:*:*:*:*:*",
+      "purl": "pkg:github/actions/checkout@v4",
+      "properties": [
+        {
+          "name": "syft:package:foundBy",
+          "value": "github-actions-usage-cataloger"
+        },
+        {
+          "name": "syft:package:type",
+          "value": "github-action"
+        },
+        {
+          "name": "syft:package:metadataType",
+          "value": "github-actions-use-statement"
+        },
+        {
+          "name": "syft:location:0:path",
+          "value": "/.github/workflows/multi-environment-deployment.yml"
+        }
+      ]
+    },
+    {
       "bom-ref": "pkg:github/actions/checkout@v4?package-id=40e30d299b9fe4d5",
       "type": "library",
       "name": "actions/checkout",
@@ -1686,6 +1678,52 @@
       ]
     },
     {
+      "bom-ref": "pkg:github/actions/download-artifact@v4?package-id=c195280206a5d999",
+      "type": "library",
+      "name": "actions/download-artifact",
+      "version": "v4",
+      "cpe": "cpe:2.3:a:actions\\/download-artifact:actions\\/download-artifact:v4:*:*:*:*:*:*:*",
+      "purl": "pkg:github/actions/download-artifact@v4",
+      "properties": [
+        {
+          "name": "syft:package:foundBy",
+          "value": "github-actions-usage-cataloger"
+        },
+        {
+          "name": "syft:package:type",
+          "value": "github-action"
+        },
+        {
+          "name": "syft:package:metadataType",
+          "value": "github-actions-use-statement"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:actions\\/download-artifact:actions\\/download_artifact:v4:*:*:*:*:*:*:*"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:actions\\/download_artifact:actions\\/download-artifact:v4:*:*:*:*:*:*:*"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:actions\\/download_artifact:actions\\/download_artifact:v4:*:*:*:*:*:*:*"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:actions\\/download:actions\\/download-artifact:v4:*:*:*:*:*:*:*"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:actions\\/download:actions\\/download_artifact:v4:*:*:*:*:*:*:*"
+        },
+        {
+          "name": "syft:location:0:path",
+          "value": "/.github/workflows/multi-environment-deployment.yml"
+        }
+      ]
+    },
+    {
       "bom-ref": "pkg:github/actions/github-script@v7?package-id=1b2cacde5bf146fd",
       "type": "library",
       "name": "actions/github-script",
@@ -1728,6 +1766,52 @@
         {
           "name": "syft:location:0:path",
           "value": "/.github/workflows/digital-provenance.yml"
+        }
+      ]
+    },
+    {
+      "bom-ref": "pkg:github/actions/github-script@v7?package-id=c7c7a106fb4200f2",
+      "type": "library",
+      "name": "actions/github-script",
+      "version": "v7",
+      "cpe": "cpe:2.3:a:actions\\/github-script:actions\\/github-script:v7:*:*:*:*:*:*:*",
+      "purl": "pkg:github/actions/github-script@v7",
+      "properties": [
+        {
+          "name": "syft:package:foundBy",
+          "value": "github-actions-usage-cataloger"
+        },
+        {
+          "name": "syft:package:type",
+          "value": "github-action"
+        },
+        {
+          "name": "syft:package:metadataType",
+          "value": "github-actions-use-statement"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:actions\\/github-script:actions\\/github_script:v7:*:*:*:*:*:*:*"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:actions\\/github_script:actions\\/github-script:v7:*:*:*:*:*:*:*"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:actions\\/github_script:actions\\/github_script:v7:*:*:*:*:*:*:*"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:actions\\/github:actions\\/github-script:v7:*:*:*:*:*:*:*"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:actions\\/github:actions\\/github_script:v7:*:*:*:*:*:*:*"
+        },
+        {
+          "name": "syft:location:0:path",
+          "value": "/.github/workflows/multi-environment-deployment.yml"
         }
       ]
     },
@@ -2054,6 +2138,52 @@
       ]
     },
     {
+      "bom-ref": "pkg:github/actions/setup-node@v4?package-id=66af9133821e9967",
+      "type": "library",
+      "name": "actions/setup-node",
+      "version": "v4",
+      "cpe": "cpe:2.3:a:actions\\/setup-node:actions\\/setup-node:v4:*:*:*:*:*:*:*",
+      "purl": "pkg:github/actions/setup-node@v4",
+      "properties": [
+        {
+          "name": "syft:package:foundBy",
+          "value": "github-actions-usage-cataloger"
+        },
+        {
+          "name": "syft:package:type",
+          "value": "github-action"
+        },
+        {
+          "name": "syft:package:metadataType",
+          "value": "github-actions-use-statement"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:actions\\/setup-node:actions\\/setup_node:v4:*:*:*:*:*:*:*"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:actions\\/setup_node:actions\\/setup-node:v4:*:*:*:*:*:*:*"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:actions\\/setup_node:actions\\/setup_node:v4:*:*:*:*:*:*:*"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:actions\\/setup:actions\\/setup-node:v4:*:*:*:*:*:*:*"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:actions\\/setup:actions\\/setup_node:v4:*:*:*:*:*:*:*"
+        },
+        {
+          "name": "syft:location:0:path",
+          "value": "/.github/workflows/multi-environment-deployment.yml"
+        }
+      ]
+    },
+    {
       "bom-ref": "pkg:github/actions/setup-node@v4?package-id=efa8850df2ee3758",
       "type": "library",
       "name": "actions/setup-node",
@@ -2188,6 +2318,52 @@
         {
           "name": "syft:location:0:path",
           "value": "/.github/workflows/digital-provenance.yml"
+        }
+      ]
+    },
+    {
+      "bom-ref": "pkg:github/actions/upload-artifact@v4?package-id=19ece33c0e1b7d51",
+      "type": "library",
+      "name": "actions/upload-artifact",
+      "version": "v4",
+      "cpe": "cpe:2.3:a:actions\\/upload-artifact:actions\\/upload-artifact:v4:*:*:*:*:*:*:*",
+      "purl": "pkg:github/actions/upload-artifact@v4",
+      "properties": [
+        {
+          "name": "syft:package:foundBy",
+          "value": "github-actions-usage-cataloger"
+        },
+        {
+          "name": "syft:package:type",
+          "value": "github-action"
+        },
+        {
+          "name": "syft:package:metadataType",
+          "value": "github-actions-use-statement"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:actions\\/upload-artifact:actions\\/upload_artifact:v4:*:*:*:*:*:*:*"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:actions\\/upload_artifact:actions\\/upload-artifact:v4:*:*:*:*:*:*:*"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:actions\\/upload_artifact:actions\\/upload_artifact:v4:*:*:*:*:*:*:*"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:actions\\/upload:actions\\/upload-artifact:v4:*:*:*:*:*:*:*"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:actions\\/upload:actions\\/upload_artifact:v4:*:*:*:*:*:*:*"
+        },
+        {
+          "name": "syft:location:0:path",
+          "value": "/.github/workflows/multi-environment-deployment.yml"
         }
       ]
     },
@@ -2969,6 +3145,21 @@
         {
           "alg": "SHA-256",
           "content": "8c1557261092e27fb00b259c959bbd453d63eb2e704d00ff1a24e97b80c8faad"
+        }
+      ]
+    },
+    {
+      "bom-ref": "4de4b69c22ccb79f",
+      "type": "file",
+      "name": "/Users/vfm/Documents/Rayootech/Ionic/digital-provenance/.github/workflows/multi-environment-deployment.yml",
+      "hashes": [
+        {
+          "alg": "SHA-1",
+          "content": "c9c26d3e0285931baa60ebea716b961a746b679a"
+        },
+        {
+          "alg": "SHA-256",
+          "content": "eb072636652d70784162abd24d8f59f7fd855893c19acab6d80d8ca83e248390"
         }
       ]
     },

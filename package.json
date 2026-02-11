@@ -62,3 +62,4 @@
   },
   "description": "An Ionic project"
 }
+{"dependencies": {"@ionic/angular": "8.1.0"}}

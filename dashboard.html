@@ -1,0 +1,305 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数字溯源系统 - CI/CD监控仪表板</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .dashboard {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            opacity: 0.8;
+            font-size: 1.1em;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            padding: 30px;
+        }
+
+        .metric-card {
+            background: white;
+            border-radius: 8px;
+            padding: 25px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border-left: 4px solid #3498db;
+        }
+
+        .metric-card.success {
+            border-left-color: #27ae60;
+        }
+
+        .metric-card.warning {
+            border-left-color: #f39c12;
+        }
+
+        .metric-card.danger {
+            border-left-color: #e74c3c;
+        }
+
+        .metric-card h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .metric-value {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #3498db;
+            margin-bottom: 10px;
+        }
+
+        .metric-value.success {
+            color: #27ae60;
+        }
+
+        .metric-value.warning {
+            color: #f39c12;
+        }
+
+        .metric-value.danger {
+            color: #e74c3c;
+        }
+
+        .metric-description {
+            color: #7f8c8d;
+            font-size: 0.9em;
+        }
+
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+
+        .status-healthy {
+            background-color: #27ae60;
+        }
+
+        .status-warning {
+            background-color: #f39c12;
+        }
+
+        .status-error {
+            background-color: #e74c3c;
+        }
+
+        .environment-list {
+            list-style: none;
+        }
+
+        .environment-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid #ecf0f1;
+        }
+
+        .environment-list li:last-child {
+            border-bottom: none;
+        }
+
+        .vulnerability-chart {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .vuln-bar {
+            flex: 1;
+            height: 30px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 0.8em;
+        }
+
+        .vuln-critical {
+            background-color: #e74c3c;
+        }
+
+        .vuln-high {
+            background-color: #f39c12;
+        }
+
+        .vuln-medium {
+            background-color: #f1c40f;
+        }
+
+        .vuln-low {
+            background-color: #95a5a6;
+        }
+
+        .footer {
+            background: #ecf0f1;
+            padding: 20px;
+            text-align: center;
+            color: #7f8c8d;
+        }
+
+        .refresh-time {
+            font-size: 0.9em;
+            opacity: 0.7;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <div class="header">
+            <h1>🔍 数字溯源系统监控</h1>
+            <p>CI/CD流水线健康状态实时监控</p>
+        </div>
+
+        <div class="metrics-grid">
+            <!-- 构建状态 -->
+            <div class="metric-card danger">
+                <h3>📊 构建状态</h3>
+                <div class="metric-value danger">
+                    0.0%
+                </div>
+                <div class="metric-description">
+                    成功率 | 总运行: 0 次<br>
+                    失败: 0 次
+                </div>
+            </div>
+
+            <!-- SBOM组件 -->
+            <div class="metric-card success">
+                <h3>📦 SBOM组件</h3>
+                <div class="metric-value success">
+                    75
+                </div>
+                <div class="metric-description">
+                    已跟踪的软件组件数量<br>
+                    AI检测: 1 个文件
+                </div>
+            </div>
+
+            <!-- 安全漏洞 -->
+            <div class="metric-card success">
+                <h3>🔒 安全漏洞</h3>
+                <div class="metric-value success">
+                    0
+                </div>
+                <div class="metric-description">
+                    严重+高危漏洞数量
+                    <div class="vulnerability-chart">
+                        <div class="vuln-bar vuln-critical">严重: 0</div>
+                        <div class="vuln-bar vuln-high">高危: 0</div>
+                        <div class="vuln-bar vuln-medium">中危: 0</div>
+                        <div class="vuln-bar vuln-low">低危: 0</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 许可证合规 -->
+            <div class="metric-card success">
+                <h3>📋 许可证合规</h3>
+                <div class="metric-value success">
+                    0
+                </div>
+                <div class="metric-description">
+                    许可证违规组件数量<br>
+                    恶意包检测: 0 个
+                </div>
+            </div>
+
+            <!-- 部署环境 -->
+            <div class="metric-card success">
+                <h3>🚀 部署环境</h3>
+                <ul class="environment-list">
+                    <li>
+                        <span class="status-indicator status-healthy"></span>
+                        开发环境 - 正常运行
+                    </li>
+                    <li>
+                        <span class="status-indicator status-healthy"></span>
+                        预发布环境 - 正常运行
+                    </li>
+                    <li>
+                        <span class="status-indicator status-healthy"></span>
+                        生产环境 - 正常运行
+                    </li>
+                </ul>
+            </div>
+
+            <!-- 性能指标 -->
+            <div class="metric-card success">
+                <h3>⚡ 性能指标</h3>
+                <div class="metric-value success">
+                    9 seconds
+                </div>
+                <div class="metric-description">
+                    平均提交时间<br>
+                    构建时间: 3.2 minutes<br>
+                    部署时间: 45 seconds<br>
+                    缓存命中率: 85%
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>最后更新: 2026-02-11 09:59:49</p>
+            <p class="refresh-time">数据每5分钟自动刷新 | 数字溯源系统 v2.0</p>
+        </div>
+    </div>
+
+    <script>
+        // 自动刷新页面
+        setTimeout(function() {
+            location.reload();
+        }, 300000); // 5分钟刷新一次
+
+        // 添加实时时钟
+        function updateTime() {
+            const now = new Date();
+            const timeString = now.toLocaleString('zh-CN');
+            document.querySelector('.refresh-time').innerHTML =
+                `数据每5分钟自动刷新 | 当前时间: ${timeString} | 数字溯源系统 v2.0`;
+        }
+
+        setInterval(updateTime, 1000);
+        updateTime();
+    </script>
+</body>
+</html>
+        

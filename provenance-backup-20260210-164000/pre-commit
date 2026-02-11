@@ -1,0 +1,46 @@
+#!/bin/bash
+
+# Digital Provenance Pre-commit Hook
+# This hook automatically generates SBOM, creates AIBOM, and signs it before each commit
+
+echo "🚀 Running Digital Provenance pre-commit checks..."
+
+# Check if required tools are installed
+command -v syft >/dev/null 2>&1 || { echo "❌ Syft is not installed. Please install it first."; exit 1; }
+command -v cosign >/dev/null 2>&1 || { echo "❌ Cosign is not installed. Please install it first."; exit 1; }
+command -v python3 >/dev/null 2>&1 || { echo "❌ Python3 is not installed. Please install it first."; exit 1; }
+
+# Generate base SBOM
+echo "📦 Generating base SBOM..."
+syft . -o cyclonedx-json > base-sbom.json
+if [ $? -ne 0 ]; then
+    echo "❌ Failed to generate SBOM"
+    exit 1
+fi
+
+# Process SBOM to create AIBOM
+echo "🤖 Processing SBOM to AIBOM..."
+python3 scripts/process_aibom.py
+if [ $? -ne 0 ]; then
+    echo "❌ Failed to process AIBOM"
+    exit 1
+fi
+
+# Sign AIBOM
+echo "🔑 Signing AIBOM..."
+COSIGN_PASSWORD=12345678 cosign sign-blob --key cosign.key --bundle aibom.sigstore.json aibom-final.json
+if [ $? -ne 0 ]; then
+    echo "❌ Failed to sign AIBOM"
+    exit 1
+fi
+
+# Verify AIBOM
+echo "✅ Verifying AIBOM signature..."
+cosign verify-blob --key cosign.pub --bundle aibom.sigstore.json aibom-final.json
+if [ $? -ne 0 ]; then
+    echo "❌ Failed to verify AIBOM signature"
+    exit 1
+fi
+
+echo "✅ Digital Provenance checks completed successfully!"
+echo "📋 AIBOM generated and signed: aibom-final.json"
