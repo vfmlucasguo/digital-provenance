@@ -108,9 +108,7 @@ jobs:
 
 **本 PR 变更**: 新增 ${commitAdded} 行，其中 AI 生成 **${commitAi}** 行 (${commitPct})
 **项目累计**: 共 ${aiLines} 行 AI 代码，渗透率 **${aiPct}**
-
----
-*由 AI 数字溯源系统自动生成*`;
+` + '---\n' + `*由 AI 数字溯源系统自动生成*`;
           await github.rest.issues.createComment({
             issue_number: context.issue.number,
             owner: context.repo.owner,
