@@ -97,3 +97,12 @@ Thumbs.db
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# Digital Provenance - Private keys
+cosign.key
+*.key
+!cosign.pub
+# Track provenance files
+!base-sbom.json
+!aibom-final.json
+!aibom.sigstore.json
