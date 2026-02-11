@@ -27,6 +27,38 @@
         "value": "Ionic-Universal-Flow"
       },
       {
+        "name": "stats:project:src_total_lines",
+        "value": "598"
+      },
+      {
+        "name": "stats:project:ai_total_lines",
+        "value": "3"
+      },
+      {
+        "name": "stats:project:ai_whole_file_lines",
+        "value": "0"
+      },
+      {
+        "name": "stats:project:ai_partial_lines",
+        "value": "3"
+      },
+      {
+        "name": "stats:project:ai_percentage",
+        "value": "0.5%"
+      },
+      {
+        "name": "stats:project:whole_files_count",
+        "value": "0"
+      },
+      {
+        "name": "stats:project:partial_files_count",
+        "value": "1"
+      },
+      {
+        "name": "stats:project:src_files_scanned",
+        "value": "44"
+      },
+      {
         "name": "stats:src_total_lines",
         "value": "598"
       },
@@ -35,32 +67,12 @@
         "value": "3"
       },
       {
-        "name": "stats:ai_whole_file_lines",
-        "value": "0"
-      },
-      {
-        "name": "stats:ai_partial_lines",
-        "value": "3"
-      },
-      {
         "name": "stats:ai_percentage",
         "value": "0.5%"
       },
       {
-        "name": "stats:whole_files_count",
-        "value": "0"
-      },
-      {
-        "name": "stats:partial_files_count",
-        "value": "1"
-      },
-      {
-        "name": "stats:src_files_scanned",
-        "value": "44"
-      },
-      {
         "name": "build:scan_time",
-        "value": "2026-02-11T15:41:04.744441"
+        "value": "2026-02-11T16:49:36.569536"
       }
     ]
   },

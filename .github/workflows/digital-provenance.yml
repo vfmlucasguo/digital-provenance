@@ -42,25 +42,28 @@ jobs:
         echo "COMPONENT_COUNT=$COMPONENT_COUNT" >> $GITHUB_ENV
 
     - name: AI Code Detection & Full Range Statistics
+      env:
+        BASE_REF: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || 'HEAD~1' }}
       run: |
         echo "🤖 Running AI code detection and statistics in src/..."
-        # 运行 Python 脚本进行全域代码行数统计与 AI 标记
-        python3 scripts/process_aibom.py
+        python3 scripts/process_aibom.py --commit --base "$BASE_REF"
 
-        # 使用 jq 从生成的 aibom-final.json 中提取量化指标
         AI_LINES=$(jq -r '.metadata.properties[] | select(.name=="stats:ai_total_lines") | .value' aibom-final.json)
         AI_PCT=$(jq -r '.metadata.properties[] | select(.name=="stats:ai_percentage") | .value' aibom-final.json)
         TOTAL_LINES=$(jq -r '.metadata.properties[] | select(.name=="stats:src_total_lines") | .value' aibom-final.json)
+        COMMIT_AI=$(jq -r '.metadata.properties[] | select(.name=="stats:commit:ai_lines") | .value // "0"' aibom-final.json)
+        COMMIT_ADDED=$(jq -r '.metadata.properties[] | select(.name=="stats:commit:total_added") | .value // "0"' aibom-final.json)
+        COMMIT_PCT=$(jq -r '.metadata.properties[] | select(.name=="stats:commit:ai_percentage") | .value // "0"' aibom-final.json)
 
-        echo "🔍 AI Statistics Results:"
-        echo "  - Total Lines in src/: $TOTAL_LINES"
-        echo "  - AI Generated Lines: $AI_LINES"
-        echo "  - AI Percentage: $AI_PCT"
+        echo "🔍 项目累计: $TOTAL_LINES 行 | AI $AI_LINES 行 ($AI_PCT)"
+        echo "🔍 当前提交: 新增 $COMMIT_ADDED 行 | AI $COMMIT_AI 行 ($COMMIT_PCT)"
 
-        # 将结果存入环境变量供后续步骤使用
         echo "AI_LINES=$AI_LINES" >> $GITHUB_ENV
         echo "AI_PCT=$AI_PCT" >> $GITHUB_ENV
         echo "TOTAL_LINES=$TOTAL_LINES" >> $GITHUB_ENV
+        echo "COMMIT_AI=$COMMIT_AI" >> $GITHUB_ENV
+        echo "COMMIT_ADDED=$COMMIT_ADDED" >> $GITHUB_ENV
+        echo "COMMIT_PCT=$COMMIT_PCT" >> $GITHUB_ENV
 
     # 4. 保存 AI 溯源结果 (仅保留核心 AIBOM，移除签名文件)
     - name: Upload AI Provenance Artifact
@@ -73,21 +76,22 @@ jobs:
     # 5. 在 GitHub Action 界面生成可视化摘要
     - name: Generate AI Provenance Summary
       run: |
-        echo "## 🤖 AI 数字溯源报告 (全域统计)" >> $GITHUB_STEP_SUMMARY
+        echo "## 🤖 AI 数字溯源报告" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
-        echo "### 📊 src/ 目录量化指标" >> $GITHUB_STEP_SUMMARY
-        echo "- **项目总行数**: $TOTAL_LINES" >> $GITHUB_STEP_SUMMARY
-        echo "- **AI 生成行数**: $AI_LINES" >> $GITHUB_STEP_SUMMARY
-        echo "- **AI 代码占比**: $AI_PCT" >> $GITHUB_STEP_SUMMARY
-        echo "- **依赖组件总数**: $COMPONENT_COUNT" >> $GITHUB_STEP_SUMMARY
+        echo "### 📊 项目累计 (src/ 全量)" >> $GITHUB_STEP_SUMMARY
+        echo "- **总行数**: $TOTAL_LINES | **AI 行数**: $AI_LINES | **渗透率**: $AI_PCT" >> $GITHUB_STEP_SUMMARY
+        echo "- **依赖组件**: $COMPONENT_COUNT" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
-        if [ "$AI_LINES" -ne "0" ]; then
-          echo "⚠️ 检测到 AI 生成的代码，已在 aibom-final.json 中自动标记" >> $GITHUB_STEP_SUMMARY
+        echo "### 📊 当前提交 (diff 新增)" >> $GITHUB_STEP_SUMMARY
+        echo "- **本 commit 新增**: $COMMIT_ADDED 行 | **AI 部分**: $COMMIT_AI 行 | **占比**: $COMMIT_PCT" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        if [ "$AI_LINES" != "0" ] || [ "$COMMIT_AI" != "0" ]; then
+          echo "⚠️ 检测到 AI 生成代码，已标记于 aibom-final.json" >> $GITHUB_STEP_SUMMARY
         else
-          echo "✅ 本次提交未检测到 AI 标注的代码" >> $GITHUB_STEP_SUMMARY
+          echo "✅ 未检测到 AI 标注代码" >> $GITHUB_STEP_SUMMARY
         fi
         echo "" >> $GITHUB_STEP_SUMMARY
-        echo "*🎯 AI 数字溯源系统 - 确保代码透明度和可追溯性*" >> $GITHUB_STEP_SUMMARY
+        echo "*🎯 AI 数字溯源 - 代码透明度与可追溯性*" >> $GITHUB_STEP_SUMMARY
 
     # 6. 针对 Pull Request 的 AI 变更分析
     - name: Comment PR with AI Analysis
@@ -95,9 +99,18 @@ jobs:
       uses: actions/github-script@v7
       with:
         script: |
-          const aiPct = process.env.AI_PCT;
-          const aiLines = process.env.AI_LINES;
-          const body = `## 🤖 AI 代码透明度分析\n\n本次变更检测到 AI 代码渗透率为 **${aiPct}** (共 ${aiLines} 行)。\n\n---\n*由 AI 数字溯源系统自动生成*`;
+          const aiPct = process.env.AI_PCT || '0';
+          const aiLines = process.env.AI_LINES || '0';
+          const commitAi = process.env.COMMIT_AI || '0';
+          const commitAdded = process.env.COMMIT_ADDED || '0';
+          const commitPct = process.env.COMMIT_PCT || '0';
+          const body = `## 🤖 AI 代码透明度分析
+
+**本 PR 变更**: 新增 ${commitAdded} 行，其中 AI 生成 **${commitAi}** 行 (${commitPct})
+**项目累计**: 共 ${aiLines} 行 AI 代码，渗透率 **${aiPct}**
+
+---
+*由 AI 数字溯源系统自动生成*`;
           await github.rest.issues.createComment({
             issue_number: context.issue.number,
             owner: context.repo.owner,
