@@ -728,3 +728,33 @@ When user input matches any trigger pattern below, **MUST** read the correspondi
 **Change-id handling (review & generation):**
 - If user input omits `[change-id]`, auto-select the first entry under `openspec/changes/` (sorted by directory listing); if none exist, ask the user to provide a kebab-case change-id.
 - If `[change-id]` is provided, validate it exists under `openspec/changes/`; if not, ask the user to confirm or provide a valid one.
+
+
+## AI 数字溯源协议 (Digital Provenance)
+
+为了确保项目的透明度与 AIBOM (AI Bill of Materials) 的准确性，AI 在实现代码时必须主动添加溯源标记。
+
+### A. 标注原则与范围限制 (重要)
+- **仅限业务代码**：标记仅允许出现在 `src/` 目录下的业务源码中。
+- **严禁修改插件/库**：**绝对禁止**在 `node_modules`、外部 Plugins、`package.json` 或环境配置文件（如 `angular.json`, `tsconfig.json`）中添加任何溯源标记。
+- **免标路径**：位于 `src/app/pages/ai-gen/` 目录下的文件会被系统自动识别，无需手动添加注释。
+
+### B. 标注语法执行
+请根据代码改动的规模选择合适的标记方式：
+
+| 场景 | 标记语法 | 放置位置 |
+| :--- | :--- | :--- |
+| **全文件 AI 生成** | `// @ai-generated` | 文件最顶部（前 5 行内） |
+| **局部代码块修改** | `// @ai-start` <br> `[AI 实现的代码]` <br> `// @ai-end` | 包裹新增或修改的功能逻辑 |
+
+### C. 示例参考
+**局部逻辑修改示例：**
+```typescript
+async processData() {
+  const data = await this.getData();
+  // @ai-start
+  // AI 根据 OpenSpec 提案实现的过滤逻辑
+  const result = data.filter(item => item.active && item.score > 80);
+  // @ai-end
+  return result;
+}
