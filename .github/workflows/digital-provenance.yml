@@ -3,7 +3,7 @@ name: AI Digital Provenance (Full Repository & Simplified)
 on:
   push:
     branches: [ main, develop ]
-    # 移除了特定路径过滤，现在监听项目根目录下的所有文件变动
+    # Path filter removed; watches all file changes under project root
     paths:
       - '**'
   pull_request:
@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    # 1. 基础环境设置
+    # 1. Base environment setup
     - name: Checkout code
       uses: actions/checkout@v4
       with:
@@ -25,17 +25,17 @@ jobs:
       with:
         python-version: '3.9'
 
-    # 2. 安装核心工具 (已移除 Cosign 安装步骤)
+    # 2. Install core tools
     - name: Install Syft (SBOM Generator)
       run: |
         curl -sSfL https://raw.githubusercontent.com/anchore/syft/main/install.sh | sh -s -- -b /usr/local/bin
         echo "📦 Syft installed for SBOM generation"
 
-    # 3. AI 数字溯源核心流程
+    # 3. AI digital provenance core flow
     - name: Generate Base SBOM
       run: |
         echo "📦 Generating Software Bill of Materials..."
-        # 使用 Syft 扫描项目并生成基础 JSON 清单
+        # Use Syft to scan project and generate base JSON manifest
         syft . -o cyclonedx-json > base-sbom.json
         COMPONENT_COUNT=$(jq '.components | length' base-sbom.json)
         echo "✅ SBOM generated with $COMPONENT_COUNT components"
@@ -54,18 +54,22 @@ jobs:
         COMMIT_AI=$(jq -r '.metadata.properties[] | select(.name=="stats:commit:ai_lines") | .value // "0"' aibom-final.json)
         COMMIT_ADDED=$(jq -r '.metadata.properties[] | select(.name=="stats:commit:total_added") | .value // "0"' aibom-final.json)
         COMMIT_PCT=$(jq -r '.metadata.properties[] | select(.name=="stats:commit:ai_percentage") | .value // "0"' aibom-final.json)
+        SCAN_TIME=$(jq -r '[.metadata.properties[]? | select(.name=="build:scan_time") | .value][0] // "N/A"' aibom-final.json 2>/dev/null || echo "N/A")
+        SBOM_TIMESTAMP=$(jq -r '.metadata.timestamp // "N/A"' base-sbom.json 2>/dev/null || echo "N/A")
 
-        echo "🔍 项目累计: $TOTAL_LINES 行 | AI $AI_LINES 行 ($AI_PCT)"
-        echo "🔍 当前提交: 新增 $COMMIT_ADDED 行 | AI $COMMIT_AI 行 ($COMMIT_PCT)"
+        echo "🔍 Project total: $TOTAL_LINES lines | AI $AI_LINES lines ($AI_PCT)"
+        echo "🔍 Current commit: +$COMMIT_ADDED lines | AI $COMMIT_AI lines ($COMMIT_PCT)"
 
         echo "AI_LINES=$AI_LINES" >> $GITHUB_ENV
+        echo "SCAN_TIME=$SCAN_TIME" >> $GITHUB_ENV
+        echo "SBOM_TIMESTAMP=$SBOM_TIMESTAMP" >> $GITHUB_ENV
         echo "AI_PCT=$AI_PCT" >> $GITHUB_ENV
         echo "TOTAL_LINES=$TOTAL_LINES" >> $GITHUB_ENV
         echo "COMMIT_AI=$COMMIT_AI" >> $GITHUB_ENV
         echo "COMMIT_ADDED=$COMMIT_ADDED" >> $GITHUB_ENV
         echo "COMMIT_PCT=$COMMIT_PCT" >> $GITHUB_ENV
 
-    # 4. 保存 AI 溯源结果 (仅保留核心 AIBOM，移除签名文件)
+    # 4. Upload AI provenance artifact
     - name: Upload AI Provenance Artifact
       uses: actions/upload-artifact@v4
       with:
@@ -73,27 +77,34 @@ jobs:
         path: aibom-final.json
         retention-days: 30
 
-    # 5. 在 GitHub Action 界面生成可视化摘要
+    # 5. Generate visual summary in GitHub Actions UI
     - name: Generate AI Provenance Summary
+      env:
+        RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
       run: |
-        echo "## 🤖 AI 数字溯源报告" >> $GITHUB_STEP_SUMMARY
+        SUMMARY_TIME=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+        echo "## 🤖 AI Digital Provenance Report" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
-        echo "### 📊 项目累计 (src/ 全量)" >> $GITHUB_STEP_SUMMARY
-        echo "- **总行数**: $TOTAL_LINES | **AI 行数**: $AI_LINES | **渗透率**: $AI_PCT" >> $GITHUB_STEP_SUMMARY
-        echo "- **依赖组件**: $COMPONENT_COUNT" >> $GITHUB_STEP_SUMMARY
+        echo "### ⏱️ Timestamps" >> $GITHUB_STEP_SUMMARY
+        echo "- **AI scan time**: \`${SCAN_TIME}\` | **SBOM generated**: \`${SBOM_TIMESTAMP}\`" >> $GITHUB_STEP_SUMMARY
+        echo "- **Summary generated**: \`${SUMMARY_TIME}\` (UTC) | [Workflow run #${{ github.run_number }}]($RUN_URL)" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
-        echo "### 📊 当前提交 (diff 新增)" >> $GITHUB_STEP_SUMMARY
-        echo "- **本 commit 新增**: $COMMIT_ADDED 行 | **AI 部分**: $COMMIT_AI 行 | **占比**: $COMMIT_PCT" >> $GITHUB_STEP_SUMMARY
+        echo "### 📊 Project Total (src/ full range)" >> $GITHUB_STEP_SUMMARY
+        echo "- **Total lines**: $TOTAL_LINES | **AI lines**: $AI_LINES | **Penetration rate**: $AI_PCT" >> $GITHUB_STEP_SUMMARY
+        echo "- **Dependencies**: $COMPONENT_COUNT" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "### 📊 Current Commit (diff added)" >> $GITHUB_STEP_SUMMARY
+        echo "- **Lines added**: $COMMIT_ADDED | **AI portion**: $COMMIT_AI lines | **Share**: $COMMIT_PCT" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
         if [ "$AI_LINES" != "0" ] || [ "$COMMIT_AI" != "0" ]; then
-          echo "⚠️ 检测到 AI 生成代码，已标记于 aibom-final.json" >> $GITHUB_STEP_SUMMARY
+          echo "⚠️ AI-generated code detected, marked in aibom-final.json" >> $GITHUB_STEP_SUMMARY
         else
-          echo "✅ 未检测到 AI 标注代码" >> $GITHUB_STEP_SUMMARY
+          echo "✅ No AI-attributed code detected" >> $GITHUB_STEP_SUMMARY
         fi
         echo "" >> $GITHUB_STEP_SUMMARY
-        echo "*🎯 AI 数字溯源 - 代码透明度与可追溯性*" >> $GITHUB_STEP_SUMMARY
+        echo "*🎯 AI Digital Provenance - Code transparency and traceability*" >> $GITHUB_STEP_SUMMARY
 
-    # 6. 针对 Pull Request 的 AI 变更分析
+    # 6. AI change analysis for Pull Request
     - name: Comment PR with AI Analysis
       if: github.event_name == 'pull_request'
       uses: actions/github-script@v7
@@ -106,13 +117,13 @@ jobs:
           const commitPct = process.env.COMMIT_PCT || '0';
           const sep = [0x2D, 0x2D, 0x2D].map(c => String.fromCharCode(c)).join('');
           const body = [
-            '## 🤖 AI 代码透明度分析',
+            '## 🤖 AI Code Transparency Analysis',
             '',
-            '**本 PR 变更**: 新增 ' + commitAdded + ' 行，其中 AI 生成 **' + commitAi + '** 行 (' + commitPct + ')',
-            '**项目累计**: 共 ' + aiLines + ' 行 AI 代码，渗透率 **' + aiPct + '**',
+            '**PR changes**: +' + commitAdded + ' lines, AI-generated **' + commitAi + '** lines (' + commitPct + ')',
+            '**Project total**: ' + aiLines + ' AI lines, penetration rate **' + aiPct + '**',
             '',
             sep,
-            '*由 AI 数字溯源系统自动生成*'
+            '*Auto-generated by AI Digital Provenance System*'
           ].join('\n');
           await github.rest.issues.createComment({
             issue_number: context.issue.number,
