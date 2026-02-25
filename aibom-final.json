@@ -28,67 +28,67 @@
       },
       {
         "name": "stats:project:src_total_lines",
-        "value": "703"
+        "value": "1281"
       },
       {
         "name": "stats:project:ai_total_lines",
-        "value": "97"
+        "value": "170"
       },
       {
         "name": "stats:project:ai_whole_file_lines",
-        "value": "94"
+        "value": "162"
       },
       {
         "name": "stats:project:ai_partial_lines",
-        "value": "3"
+        "value": "8"
       },
       {
         "name": "stats:project:ai_percentage",
-        "value": "13.8%"
+        "value": "13.27%"
       },
       {
         "name": "stats:project:whole_files_count",
-        "value": "7"
+        "value": "11"
       },
       {
         "name": "stats:project:partial_files_count",
-        "value": "1"
+        "value": "5"
       },
       {
         "name": "stats:project:src_files_scanned",
-        "value": "52"
+        "value": "93"
       },
       {
         "name": "stats:src_total_lines",
-        "value": "703"
+        "value": "1281"
       },
       {
         "name": "stats:ai_total_lines",
-        "value": "97"
+        "value": "170"
       },
       {
         "name": "stats:ai_percentage",
-        "value": "13.8%"
+        "value": "13.27%"
       },
       {
         "name": "stats:services:src_total_lines",
-        "value": "0"
+        "value": "101"
       },
       {
         "name": "stats:services:ai_total_lines",
-        "value": "0"
+        "value": "68"
       },
       {
         "name": "stats:services:ai_percentage",
-        "value": "0%"
+        "value": "67.33%"
       },
       {
         "name": "stats:services:files_count",
-        "value": "0"
+        "value": "6"
       },
       {
         "name": "build:scan_time",
-        "value": "2026-02-25T10:48:58.890192"
+        "value": "2026-02-25T11:01:08.461916"
       }
     ]
   },
@@ -3311,6 +3311,150 @@
         {
           "name": "ai:lines",
           "value": "14"
+        }
+      ]
+    },
+    {
+      "type": "file",
+      "name": "src/app/pages/ai-demo-list/ai-demo-list.page.ts",
+      "properties": [
+        {
+          "name": "ai:generated",
+          "value": "true"
+        },
+        {
+          "name": "ai:scope",
+          "value": "partial"
+        },
+        {
+          "name": "ai:lines",
+          "value": "2"
+        }
+      ]
+    },
+    {
+      "type": "file",
+      "name": "src/app/pages/header-whole/header-whole.page.html",
+      "properties": [
+        {
+          "name": "ai:generated",
+          "value": "true"
+        },
+        {
+          "name": "ai:scope",
+          "value": "partial"
+        },
+        {
+          "name": "ai:lines",
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "type": "file",
+      "name": "src/app/pages/inline-partial/inline-partial.page.html",
+      "properties": [
+        {
+          "name": "ai:generated",
+          "value": "true"
+        },
+        {
+          "name": "ai:scope",
+          "value": "partial"
+        },
+        {
+          "name": "ai:lines",
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "type": "file",
+      "name": "src/app/pages/standalone-partial/standalone-partial.page.html",
+      "properties": [
+        {
+          "name": "ai:generated",
+          "value": "true"
+        },
+        {
+          "name": "ai:scope",
+          "value": "partial"
+        },
+        {
+          "name": "ai:lines",
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "type": "file",
+      "name": "src/app/services/ai-gen/whole-by-path.service.ts",
+      "properties": [
+        {
+          "name": "ai:generated",
+          "value": "true"
+        },
+        {
+          "name": "ai:scope",
+          "value": "whole"
+        },
+        {
+          "name": "ai:lines",
+          "value": "17"
+        }
+      ]
+    },
+    {
+      "type": "file",
+      "name": "src/app/services/header-whole.service.ts",
+      "properties": [
+        {
+          "name": "ai:generated",
+          "value": "true"
+        },
+        {
+          "name": "ai:scope",
+          "value": "whole"
+        },
+        {
+          "name": "ai:lines",
+          "value": "18"
+        }
+      ]
+    },
+    {
+      "type": "file",
+      "name": "src/app/services/inline-partial.service.ts",
+      "properties": [
+        {
+          "name": "ai:generated",
+          "value": "true"
+        },
+        {
+          "name": "ai:scope",
+          "value": "whole"
+        },
+        {
+          "name": "ai:lines",
+          "value": "17"
+        }
+      ]
+    },
+    {
+      "type": "file",
+      "name": "src/app/services/standalone-partial.service.ts",
+      "properties": [
+        {
+          "name": "ai:generated",
+          "value": "true"
+        },
+        {
+          "name": "ai:scope",
+          "value": "whole"
+        },
+        {
+          "name": "ai:lines",
+          "value": "16"
         }
       ]
     },

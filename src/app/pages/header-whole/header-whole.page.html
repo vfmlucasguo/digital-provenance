@@ -1,0 +1,22 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/tabs/ai-demo"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Header Whole</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Scenario 2: Header @ai-generated</ion-card-title>
+      <ion-card-subtitle>First 10 lines contain marker -> entire file counts as AI</ion-card-subtitle>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-button (click)="run()">Run</ion-button>
+      <p *ngIf="title">Title: {{ title }}</p>
+      <p *ngIf="value">Computed: {{ value }}</p>
+    </ion-card-content>
+  </ion-card>
+</ion-content>
