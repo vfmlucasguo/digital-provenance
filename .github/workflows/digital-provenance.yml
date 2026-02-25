@@ -97,6 +97,7 @@ jobs:
       env:
         RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
       run: |
+        set +e
         SUMMARY_TIME=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
         echo "## 🤖 AI Digital Provenance Report" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
@@ -117,7 +118,7 @@ jobs:
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "<details><summary><strong>📋 AI-generated lines in this PR ($COMMIT_AI lines)</strong></summary>" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          jq -r '.[] | "- \`\(.file):\(.line)\` \(.content)"' commit-ai-lines.json 2>/dev/null >> $GITHUB_STEP_SUMMARY
+          jq -r '.[] | "- \`\(.file):\(.line)\` \(.content)"' commit-ai-lines.json 2>/dev/null >> $GITHUB_STEP_SUMMARY || true
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "</details>" >> $GITHUB_STEP_SUMMARY
         fi
