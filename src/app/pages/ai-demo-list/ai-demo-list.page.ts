@@ -14,5 +14,7 @@ export class AiDemoListPage {
     { path: '/tabs/standalone-partial', title: 'Standalone Partial', desc: '// @ai-generated' },
     { path: '/tabs/inline-partial', title: 'Inline Partial', desc: 'Trailing @ai-generated' },
     { path: '/tabs/no-ai', title: 'No AI', desc: 'Baseline (human-written)' },
+    { path: '/tabs/pr-test-utils', title: 'PR Test 1', desc: '@generated-ai (dev branch)' },
+    { path: '/tabs/pr-test-validator', title: 'PR Test 2', desc: 'Block validator (dev branch)' },
   ];
 }

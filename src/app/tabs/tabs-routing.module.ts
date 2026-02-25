@@ -48,6 +48,14 @@ const routes: Routes = [
         loadChildren: () => import('../pages/no-ai/no-ai.module').then(m => m.NoAiPageModule)
       },
       {
+        path: 'pr-test-utils',
+        loadChildren: () => import('../pages/pr-test-utils/pr-test-utils.module').then(m => m.PrTestUtilsPageModule)
+      },
+      {
+        path: 'pr-test-validator',
+        loadChildren: () => import('../pages/pr-test-validator/pr-test-validator.module').then(m => m.PrTestValidatorPageModule)
+      },
+      {
         path: '',
         redirectTo: '/tabs/tab1',
         pathMatch: 'full'
