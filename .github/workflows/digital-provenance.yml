@@ -87,7 +87,9 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: ai-provenance-report-${{ github.sha }}
-        path: aibom-final.json
+        path: |
+          aibom-final.json
+          commit-ai-lines.json
         retention-days: 30
 
     # 5. Generate visual summary in GitHub Actions UI
@@ -111,6 +113,14 @@ jobs:
         echo "" >> $GITHUB_STEP_SUMMARY
         echo "### 📊 Current Commit (diff added)" >> $GITHUB_STEP_SUMMARY
         echo "- **Lines added**: $COMMIT_ADDED | **AI portion**: $COMMIT_AI lines | **Share**: $COMMIT_PCT" >> $GITHUB_STEP_SUMMARY
+        if [ -f commit-ai-lines.json ] && [ "$COMMIT_AI" != "0" ]; then
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "<details><summary><strong>📋 AI-generated lines in this PR ($COMMIT_AI lines)</strong></summary>" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          jq -r '.[] | "- \`\(.file):\(.line)\` \(.content)"' commit-ai-lines.json 2>/dev/null >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "</details>" >> $GITHUB_STEP_SUMMARY
+        fi
         echo "" >> $GITHUB_STEP_SUMMARY
         if [ "$AI_LINES" != "0" ] || [ "$COMMIT_AI" != "0" ]; then
           echo "⚠️ AI-generated code detected, marked in aibom-final.json" >> $GITHUB_STEP_SUMMARY

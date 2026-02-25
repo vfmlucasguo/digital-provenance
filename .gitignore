@@ -102,6 +102,8 @@ yarn-error.log*
 cosign.key
 *.key
 !cosign.pub
+# Generated AI line detail (local/CI only)
+commit-ai-lines.json
 # Track provenance files
 !base-sbom.json
 !aibom-final.json
