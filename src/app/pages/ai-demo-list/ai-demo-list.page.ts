@@ -16,5 +16,7 @@ export class AiDemoListPage {
     { path: '/tabs/no-ai', title: 'No AI', desc: 'Baseline (human-written)' },
     { path: '/tabs/pr-test-utils', title: 'PR Test 1', desc: '@generated-ai (dev branch)' },
     { path: '/tabs/pr-test-validator', title: 'PR Test 2', desc: 'Block validator (dev branch)' },
+    { path: '/tabs/workflow-test-debounce', title: 'Workflow Test 1', desc: 'Inline debounce' },
+    { path: '/tabs/workflow-test-fetch', title: 'Workflow Test 2', desc: 'Block parseJson' },
   ];
 }

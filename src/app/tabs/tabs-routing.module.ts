@@ -56,6 +56,14 @@ const routes: Routes = [
         loadChildren: () => import('../pages/pr-test-validator/pr-test-validator.module').then(m => m.PrTestValidatorPageModule)
       },
       {
+        path: 'workflow-test-debounce',
+        loadChildren: () => import('../pages/workflow-test-debounce/workflow-test-debounce.module').then(m => m.WorkflowTestDebouncePageModule)
+      },
+      {
+        path: 'workflow-test-fetch',
+        loadChildren: () => import('../pages/workflow-test-fetch/workflow-test-fetch.module').then(m => m.WorkflowTestFetchPageModule)
+      },
+      {
         path: '',
         redirectTo: '/tabs/tab1',
         pathMatch: 'full'

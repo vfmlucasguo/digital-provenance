@@ -28,67 +28,67 @@
       },
       {
         "name": "stats:project:src_total_lines",
-        "value": "1451"
+        "value": "1627"
       },
       {
         "name": "stats:project:ai_total_lines",
-        "value": "184"
+        "value": "206"
       },
       {
         "name": "stats:project:ai_whole_file_lines",
-        "value": "160"
+        "value": "177"
       },
       {
         "name": "stats:project:ai_partial_lines",
-        "value": "24"
+        "value": "29"
       },
       {
         "name": "stats:project:ai_percentage",
-        "value": "12.68%"
+        "value": "12.66%"
       },
       {
         "name": "stats:project:whole_files_count",
-        "value": "11"
+        "value": "12"
       },
       {
         "name": "stats:project:partial_files_count",
-        "value": "10"
+        "value": "12"
       },
       {
         "name": "stats:project:src_files_scanned",
-        "value": "105"
+        "value": "117"
       },
       {
         "name": "stats:src_total_lines",
-        "value": "1451"
+        "value": "1627"
       },
       {
         "name": "stats:ai_total_lines",
-        "value": "184"
+        "value": "206"
       },
       {
         "name": "stats:ai_percentage",
-        "value": "12.68%"
+        "value": "12.66%"
       },
       {
         "name": "stats:services:src_total_lines",
-        "value": "135"
+        "value": "172"
       },
       {
         "name": "stats:services:ai_total_lines",
-        "value": "90"
+        "value": "109"
       },
       {
         "name": "stats:services:ai_percentage",
-        "value": "66.67%"
+        "value": "63.37%"
       },
       {
         "name": "stats:services:files_count",
-        "value": "8"
+        "value": "10"
       },
       {
         "name": "build:scan_time",
-        "value": "2026-02-25T15:07:29.438386"
+        "value": "2026-02-25T15:13:03.260723"
       }
     ]
   },
@@ -3328,7 +3328,7 @@
         },
         {
           "name": "ai:lines",
-          "value": "6"
+          "value": "8"
         }
       ]
     },
@@ -3407,6 +3407,24 @@
     {
       "type": "file",
       "name": "src/app/pages/standalone-partial/standalone-partial.page.html",
+      "properties": [
+        {
+          "name": "ai:generated",
+          "value": "true"
+        },
+        {
+          "name": "ai:scope",
+          "value": "partial"
+        },
+        {
+          "name": "ai:lines",
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "type": "file",
+      "name": "src/app/pages/workflow-test-debounce/workflow-test-debounce.page.html",
       "properties": [
         {
           "name": "ai:generated",
@@ -3545,6 +3563,42 @@
         {
           "name": "ai:lines",
           "value": "16"
+        }
+      ]
+    },
+    {
+      "type": "file",
+      "name": "src/app/services/workflow-test-debounce.service.ts",
+      "properties": [
+        {
+          "name": "ai:generated",
+          "value": "true"
+        },
+        {
+          "name": "ai:scope",
+          "value": "whole"
+        },
+        {
+          "name": "ai:lines",
+          "value": "17"
+        }
+      ]
+    },
+    {
+      "type": "file",
+      "name": "src/app/services/workflow-test-fetch.service.ts",
+      "properties": [
+        {
+          "name": "ai:generated",
+          "value": "true"
+        },
+        {
+          "name": "ai:scope",
+          "value": "partial"
+        },
+        {
+          "name": "ai:lines",
+          "value": "2"
         }
       ]
     },
