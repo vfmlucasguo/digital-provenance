@@ -291,6 +291,14 @@ def process(args=None):
 
     ai_total_lines = ai_whole_lines + ai_partial_lines
 
+    # 1a. src/app/services 子目录统计
+    SERVICES_PREFIX = "src/app/services/"
+    services_files = [fp for fp in src_files if fp.startswith(SERVICES_PREFIX)]
+    services_total = sum(file_results[fp]["total_lines"] for fp in services_files)
+    services_ai = sum(file_results[fp]["ai_lines"] for fp in services_files)
+    services_pct = round((services_ai / services_total * 100), 2) if services_total > 0 else 0
+    services_pct_str = str(services_pct) + "%"
+
     # 1b. 当前提交统计（可选）
     commit_stats = None
     git_commit = ""
@@ -352,6 +360,10 @@ def process(args=None):
         {"name": "stats:src_total_lines", "value": str(total_lines)},
         {"name": "stats:ai_total_lines", "value": str(ai_total_lines)},
         {"name": "stats:ai_percentage", "value": ai_pct_str},
+        {"name": "stats:services:src_total_lines", "value": str(services_total)},
+        {"name": "stats:services:ai_total_lines", "value": str(services_ai)},
+        {"name": "stats:services:ai_percentage", "value": services_pct_str},
+        {"name": "stats:services:files_count", "value": str(len(services_files))},
         {"name": "build:scan_time", "value": datetime.now().isoformat()},
     ]
     if commit_stats is not None:
@@ -373,6 +385,8 @@ def process(args=None):
 
     print("📊 [项目累计] src/ 全量统计:")
     print("   总行数: %s | 扫描文件: %s" % (total_lines, len(src_files)))
+    print("📊 [src/app/services] 子目录统计:")
+    print("   总行数: %s | 文件数: %s | AI 行数: %s | 渗透率: %s%%" % (services_total, len(services_files), services_ai, services_pct))
     print("   AI 行数: %s (整文件 %s + 片段 %s)" % (ai_total_lines, ai_whole_lines, ai_partial_lines))
     print("   渗透率: %s%%" % ai_pct)
     print("   整文件: %s 个 | 部分片段: %s 个" % (whole_files_count, partial_files_count))

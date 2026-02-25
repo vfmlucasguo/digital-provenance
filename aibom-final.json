@@ -71,8 +71,24 @@
         "value": "13.8%"
       },
       {
+        "name": "stats:services:src_total_lines",
+        "value": "0"
+      },
+      {
+        "name": "stats:services:ai_total_lines",
+        "value": "0"
+      },
+      {
+        "name": "stats:services:ai_percentage",
+        "value": "0%"
+      },
+      {
+        "name": "stats:services:files_count",
+        "value": "0"
+      },
+      {
         "name": "build:scan_time",
-        "value": "2026-02-24T15:47:03.142028"
+        "value": "2026-02-25T10:48:58.890192"
       }
     ]
   },
