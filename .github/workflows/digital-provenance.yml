@@ -12,6 +12,10 @@ on:
 jobs:
   ai-provenance:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+      issues: write
 
     steps:
     # 1. Base environment setup
