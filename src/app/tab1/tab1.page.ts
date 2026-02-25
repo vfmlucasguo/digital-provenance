@@ -9,7 +9,6 @@ import { Component } from '@angular/core';
 export class Tab1Page {
 
   constructor() {}
-  // @ai-generated
   ngOnChanges() {
     console.log('Tab1Page ngOnChanges');
   }

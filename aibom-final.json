@@ -28,67 +28,67 @@
       },
       {
         "name": "stats:project:src_total_lines",
-        "value": "1627"
+        "value": "597"
       },
       {
         "name": "stats:project:ai_total_lines",
-        "value": "206"
+        "value": "0"
       },
       {
         "name": "stats:project:ai_whole_file_lines",
-        "value": "177"
+        "value": "0"
       },
       {
         "name": "stats:project:ai_partial_lines",
-        "value": "29"
+        "value": "0"
       },
       {
         "name": "stats:project:ai_percentage",
-        "value": "12.66%"
+        "value": "0.0%"
       },
       {
         "name": "stats:project:whole_files_count",
-        "value": "12"
+        "value": "0"
       },
       {
         "name": "stats:project:partial_files_count",
-        "value": "12"
+        "value": "0"
       },
       {
         "name": "stats:project:src_files_scanned",
-        "value": "117"
+        "value": "44"
       },
       {
         "name": "stats:src_total_lines",
-        "value": "1627"
+        "value": "597"
       },
       {
         "name": "stats:ai_total_lines",
-        "value": "206"
+        "value": "0"
       },
       {
         "name": "stats:ai_percentage",
-        "value": "12.66%"
+        "value": "0.0%"
       },
       {
         "name": "stats:services:src_total_lines",
-        "value": "172"
+        "value": "0"
       },
       {
         "name": "stats:services:ai_total_lines",
-        "value": "109"
+        "value": "0"
       },
       {
         "name": "stats:services:ai_percentage",
-        "value": "63.37%"
+        "value": "0%"
       },
       {
         "name": "stats:services:files_count",
-        "value": "10"
+        "value": "0"
       },
       {
         "name": "build:scan_time",
-        "value": "2026-02-25T15:13:03.260723"
+        "value": "2026-02-25T16:54:38.503537"
       }
     ]
   },
@@ -3185,438 +3185,6 @@
         {
           "alg": "SHA-256",
           "content": "deaa172a59caa37a07bf758bfa8bcc3a65a0d7ac40722b45b18a27740f724dcb"
-        }
-      ]
-    },
-    {
-      "type": "file",
-      "name": "src/app/ai-gen/whole-by-path.service.ts",
-      "properties": [
-        {
-          "name": "ai:generated",
-          "value": "true"
-        },
-        {
-          "name": "ai:scope",
-          "value": "whole"
-        },
-        {
-          "name": "ai:lines",
-          "value": "12"
-        }
-      ]
-    },
-    {
-      "type": "file",
-      "name": "src/app/ai-stats-demo/block-partial.service.ts",
-      "properties": [
-        {
-          "name": "ai:generated",
-          "value": "true"
-        },
-        {
-          "name": "ai:scope",
-          "value": "partial"
-        },
-        {
-          "name": "ai:lines",
-          "value": "3"
-        }
-      ]
-    },
-    {
-      "type": "file",
-      "name": "src/app/ai-stats-demo/demo.component.html",
-      "properties": [
-        {
-          "name": "ai:generated",
-          "value": "true"
-        },
-        {
-          "name": "ai:scope",
-          "value": "whole"
-        },
-        {
-          "name": "ai:lines",
-          "value": "12"
-        }
-      ]
-    },
-    {
-      "type": "file",
-      "name": "src/app/ai-stats-demo/demo.component.scss",
-      "properties": [
-        {
-          "name": "ai:generated",
-          "value": "true"
-        },
-        {
-          "name": "ai:scope",
-          "value": "whole"
-        },
-        {
-          "name": "ai:lines",
-          "value": "10"
-        }
-      ]
-    },
-    {
-      "type": "file",
-      "name": "src/app/ai-stats-demo/header-whole.component.ts",
-      "properties": [
-        {
-          "name": "ai:generated",
-          "value": "true"
-        },
-        {
-          "name": "ai:scope",
-          "value": "whole"
-        },
-        {
-          "name": "ai:lines",
-          "value": "17"
-        }
-      ]
-    },
-    {
-      "type": "file",
-      "name": "src/app/ai-stats-demo/inline-partial.service.ts",
-      "properties": [
-        {
-          "name": "ai:generated",
-          "value": "true"
-        },
-        {
-          "name": "ai:scope",
-          "value": "whole"
-        },
-        {
-          "name": "ai:lines",
-          "value": "12"
-        }
-      ]
-    },
-    {
-      "type": "file",
-      "name": "src/app/ai-stats-demo/standalone-partial.service.ts",
-      "properties": [
-        {
-          "name": "ai:generated",
-          "value": "true"
-        },
-        {
-          "name": "ai:scope",
-          "value": "whole"
-        },
-        {
-          "name": "ai:lines",
-          "value": "14"
-        }
-      ]
-    },
-    {
-      "type": "file",
-      "name": "src/app/pages/ai-demo-list/ai-demo-list.page.ts",
-      "properties": [
-        {
-          "name": "ai:generated",
-          "value": "true"
-        },
-        {
-          "name": "ai:scope",
-          "value": "partial"
-        },
-        {
-          "name": "ai:lines",
-          "value": "8"
-        }
-      ]
-    },
-    {
-      "type": "file",
-      "name": "src/app/pages/block-partial/block-partial.page.html",
-      "properties": [
-        {
-          "name": "ai:generated",
-          "value": "true"
-        },
-        {
-          "name": "ai:scope",
-          "value": "partial"
-        },
-        {
-          "name": "ai:lines",
-          "value": "1"
-        }
-      ]
-    },
-    {
-      "type": "file",
-      "name": "src/app/pages/header-whole/header-whole.page.html",
-      "properties": [
-        {
-          "name": "ai:generated",
-          "value": "true"
-        },
-        {
-          "name": "ai:scope",
-          "value": "partial"
-        },
-        {
-          "name": "ai:lines",
-          "value": "1"
-        }
-      ]
-    },
-    {
-      "type": "file",
-      "name": "src/app/pages/inline-partial/inline-partial.page.html",
-      "properties": [
-        {
-          "name": "ai:generated",
-          "value": "true"
-        },
-        {
-          "name": "ai:scope",
-          "value": "partial"
-        },
-        {
-          "name": "ai:lines",
-          "value": "1"
-        }
-      ]
-    },
-    {
-      "type": "file",
-      "name": "src/app/pages/pr-test-utils/pr-test-utils.page.html",
-      "properties": [
-        {
-          "name": "ai:generated",
-          "value": "true"
-        },
-        {
-          "name": "ai:scope",
-          "value": "partial"
-        },
-        {
-          "name": "ai:lines",
-          "value": "1"
-        }
-      ]
-    },
-    {
-      "type": "file",
-      "name": "src/app/pages/standalone-partial/standalone-partial.page.html",
-      "properties": [
-        {
-          "name": "ai:generated",
-          "value": "true"
-        },
-        {
-          "name": "ai:scope",
-          "value": "partial"
-        },
-        {
-          "name": "ai:lines",
-          "value": "1"
-        }
-      ]
-    },
-    {
-      "type": "file",
-      "name": "src/app/pages/workflow-test-debounce/workflow-test-debounce.page.html",
-      "properties": [
-        {
-          "name": "ai:generated",
-          "value": "true"
-        },
-        {
-          "name": "ai:scope",
-          "value": "partial"
-        },
-        {
-          "name": "ai:lines",
-          "value": "1"
-        }
-      ]
-    },
-    {
-      "type": "file",
-      "name": "src/app/services/ai-gen/whole-by-path.service.ts",
-      "properties": [
-        {
-          "name": "ai:generated",
-          "value": "true"
-        },
-        {
-          "name": "ai:scope",
-          "value": "whole"
-        },
-        {
-          "name": "ai:lines",
-          "value": "17"
-        }
-      ]
-    },
-    {
-      "type": "file",
-      "name": "src/app/services/block-partial.service.ts",
-      "properties": [
-        {
-          "name": "ai:generated",
-          "value": "true"
-        },
-        {
-          "name": "ai:scope",
-          "value": "partial"
-        },
-        {
-          "name": "ai:lines",
-          "value": "3"
-        }
-      ]
-    },
-    {
-      "type": "file",
-      "name": "src/app/services/header-whole.service.ts",
-      "properties": [
-        {
-          "name": "ai:generated",
-          "value": "true"
-        },
-        {
-          "name": "ai:scope",
-          "value": "whole"
-        },
-        {
-          "name": "ai:lines",
-          "value": "18"
-        }
-      ]
-    },
-    {
-      "type": "file",
-      "name": "src/app/services/inline-partial.service.ts",
-      "properties": [
-        {
-          "name": "ai:generated",
-          "value": "true"
-        },
-        {
-          "name": "ai:scope",
-          "value": "whole"
-        },
-        {
-          "name": "ai:lines",
-          "value": "17"
-        }
-      ]
-    },
-    {
-      "type": "file",
-      "name": "src/app/services/pr-test-utils.service.ts",
-      "properties": [
-        {
-          "name": "ai:generated",
-          "value": "true"
-        },
-        {
-          "name": "ai:scope",
-          "value": "whole"
-        },
-        {
-          "name": "ai:lines",
-          "value": "15"
-        }
-      ]
-    },
-    {
-      "type": "file",
-      "name": "src/app/services/pr-test-validator.service.ts",
-      "properties": [
-        {
-          "name": "ai:generated",
-          "value": "true"
-        },
-        {
-          "name": "ai:scope",
-          "value": "partial"
-        },
-        {
-          "name": "ai:lines",
-          "value": "4"
-        }
-      ]
-    },
-    {
-      "type": "file",
-      "name": "src/app/services/standalone-partial.service.ts",
-      "properties": [
-        {
-          "name": "ai:generated",
-          "value": "true"
-        },
-        {
-          "name": "ai:scope",
-          "value": "whole"
-        },
-        {
-          "name": "ai:lines",
-          "value": "16"
-        }
-      ]
-    },
-    {
-      "type": "file",
-      "name": "src/app/services/workflow-test-debounce.service.ts",
-      "properties": [
-        {
-          "name": "ai:generated",
-          "value": "true"
-        },
-        {
-          "name": "ai:scope",
-          "value": "whole"
-        },
-        {
-          "name": "ai:lines",
-          "value": "17"
-        }
-      ]
-    },
-    {
-      "type": "file",
-      "name": "src/app/services/workflow-test-fetch.service.ts",
-      "properties": [
-        {
-          "name": "ai:generated",
-          "value": "true"
-        },
-        {
-          "name": "ai:scope",
-          "value": "partial"
-        },
-        {
-          "name": "ai:lines",
-          "value": "2"
-        }
-      ]
-    },
-    {
-      "type": "file",
-      "name": "src/app/tab1/tab1.page.ts",
-      "properties": [
-        {
-          "name": "ai:generated",
-          "value": "true"
-        },
-        {
-          "name": "ai:scope",
-          "value": "partial"
-        },
-        {
-          "name": "ai:lines",
-          "value": "3"
         }
       ]
     }

@@ -44,6 +44,22 @@ def _count_non_empty(lines: list[str]) -> int:
     return sum(1 for l in lines if l.strip())
 
 
+def _marker_in_comment(line: str, line_lower: str) -> bool:
+    """Return True if any AI marker on this line appears after a comment delimiter.
+    Prevents false positives when the marker appears in string literals or HTML text.
+    Supported delimiters: // /* <!-- #
+    """
+    for marker in ('@ai-generated', '@generated-ai'):
+        pos = line_lower.find(marker)
+        if pos == -1:
+            continue
+        before = line[:pos]
+        if ('//' in before or '/*' in before or '<!--' in before or
+                before.lstrip().startswith('#') or before.lstrip().startswith('*')):
+            return True
+    return False
+
+
 def analyze_file(file_path: str, project_root: str = ".") -> dict:
     """
     分析单个文件，返回整文件/部分片段的 AI 统计
@@ -159,10 +175,11 @@ def analyze_file(file_path: str, project_root: str = ".") -> dict:
             i += 1
             continue
 
-        # 行尾/行内标记：该行含 @ai-generated（排除块标记行）
+        # 行尾/行内标记：标记必须出现在注释部分（// /* <!-- # 之后），避免字符串/文本内容误报
         if ('@ai-generated' in s_lower or '@generated-ai' in s_lower):
             if '@ai-generated-begin' not in s_lower and '@ai-generated-end' not in s_lower:
-                ai_line_indices.add(i)
+                if _marker_in_comment(line, s_lower):
+                    ai_line_indices.add(i)
 
         i += 1
 

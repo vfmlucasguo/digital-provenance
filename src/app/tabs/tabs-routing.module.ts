@@ -20,50 +20,6 @@ const routes: Routes = [
         loadChildren: () => import('../tab3/tab3.module').then(m => m.Tab3PageModule)
       },
       {
-        path: 'ai-demo',
-        loadChildren: () => import('../pages/ai-demo-list/ai-demo-list.module').then(m => m.AiDemoListPageModule)
-      },
-      {
-        path: 'whole-by-path',
-        loadChildren: () => import('../pages/whole-by-path/whole-by-path.module').then(m => m.WholeByPathPageModule)
-      },
-      {
-        path: 'header-whole',
-        loadChildren: () => import('../pages/header-whole/header-whole.module').then(m => m.HeaderWholePageModule)
-      },
-      {
-        path: 'block-partial',
-        loadChildren: () => import('../pages/block-partial/block-partial.module').then(m => m.BlockPartialPageModule)
-      },
-      {
-        path: 'standalone-partial',
-        loadChildren: () => import('../pages/standalone-partial/standalone-partial.module').then(m => m.StandalonePartialPageModule)
-      },
-      {
-        path: 'inline-partial',
-        loadChildren: () => import('../pages/inline-partial/inline-partial.module').then(m => m.InlinePartialPageModule)
-      },
-      {
-        path: 'no-ai',
-        loadChildren: () => import('../pages/no-ai/no-ai.module').then(m => m.NoAiPageModule)
-      },
-      {
-        path: 'pr-test-utils',
-        loadChildren: () => import('../pages/pr-test-utils/pr-test-utils.module').then(m => m.PrTestUtilsPageModule)
-      },
-      {
-        path: 'pr-test-validator',
-        loadChildren: () => import('../pages/pr-test-validator/pr-test-validator.module').then(m => m.PrTestValidatorPageModule)
-      },
-      {
-        path: 'workflow-test-debounce',
-        loadChildren: () => import('../pages/workflow-test-debounce/workflow-test-debounce.module').then(m => m.WorkflowTestDebouncePageModule)
-      },
-      {
-        path: 'workflow-test-fetch',
-        loadChildren: () => import('../pages/workflow-test-fetch/workflow-test-fetch.module').then(m => m.WorkflowTestFetchPageModule)
-      },
-      {
         path: '',
         redirectTo: '/tabs/tab1',
         pathMatch: 'full'
