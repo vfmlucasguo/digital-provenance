@@ -1,0 +1,21 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/tabs/ai-demo"></ion-back-button>
+    </ion-buttons>
+    <ion-title>PR Test 1</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>PR Test: @generated-ai</ion-card-title>
+      <ion-card-subtitle>Alternate marker - whole file AI</ion-card-subtitle>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-button (click)="run()">Run</ion-button>
+      <p *ngIf="result">{{ result }}</p>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

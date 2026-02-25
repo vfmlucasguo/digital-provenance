@@ -81,11 +81,12 @@ def analyze_file(file_path: str, project_root: str = ".") -> dict:
         result["ai_line_indices"] = _all_non_empty_indices()
         return result
 
-    # 2. 整文件：头部(前 N 行) 有 @ai-generated 或 @generated-ai
+    # 2. 整文件：头部(前 N 行) 有 @ai-generated 或 @generated-ai（排除块标记行）
     for line in lines[:HEADER_LINES]:
         sl = line.strip().lower()
         if '@ai-generated' in sl or '@generated-ai' in sl:
-            if '@ai-generated-end' not in sl:
+            # 含 @ai-generated-begin 或 @ai-generated-end 的是块标记，不触发整文件
+            if '@ai-generated-begin' not in sl and '@ai-generated-end' not in sl:
                 result["whole_file"] = True
                 result["ai_lines"] = total
                 result["scope"] = "whole"
@@ -123,7 +124,8 @@ def analyze_file(file_path: str, project_root: str = ".") -> dict:
             continue
 
         if in_block:
-            if indent <= block_indent and block_indent >= 0:
+            # 缩进回退（严格小于 begin 行）时退出块
+            if indent < block_indent and block_indent >= 0:
                 in_block = False
             else:
                 ai_line_indices.add(i)
@@ -157,9 +159,10 @@ def analyze_file(file_path: str, project_root: str = ".") -> dict:
             i += 1
             continue
 
-        # 行尾/行内标记：该行含 @ai-generated
-        if ('@ai-generated' in s_lower or '@generated-ai' in s_lower) and '@ai-generated-end' not in s_lower:
-            ai_line_indices.add(i)
+        # 行尾/行内标记：该行含 @ai-generated（排除块标记行）
+        if ('@ai-generated' in s_lower or '@generated-ai' in s_lower):
+            if '@ai-generated-begin' not in s_lower and '@ai-generated-end' not in s_lower:
+                ai_line_indices.add(i)
 
         i += 1
 
@@ -224,10 +227,11 @@ def compute_commit_stats(base, head, project_root, file_results):
     """计算当前提交的 AI 统计：仅统计 diff 新增行中属于 AI 区域的行"""
     changed = get_changed_src_files(base, head, project_root)
     if not changed:
-        return {"ai_lines": 0, "total_added": 0, "changed_files": 0, "ai_changed_files": 0}
+        return {"ai_lines": 0, "total_added": 0, "changed_files": 0, "ai_changed_files": 0, "ai_line_details": []}
     commit_ai = 0
     commit_total = 0
     ai_file_count = 0
+    ai_line_details = []
     for fp in changed:
         added = get_diff_added_line_numbers(base, head, fp, project_root)
         if not added:
@@ -240,11 +244,25 @@ def compute_commit_stats(base, head, project_root, file_results):
         if overlap:
             commit_ai += len(overlap)
             ai_file_count += 1
+            full_path = os.path.join(project_root, fp)
+            try:
+                with open(full_path, 'r', encoding='utf-8', errors='ignore') as f:
+                    file_lines = f.readlines()
+                for idx in sorted(overlap):
+                    if 0 <= idx < len(file_lines):
+                        content = file_lines[idx].rstrip()[:80]
+                        if len(file_lines[idx].rstrip()) > 80:
+                            content += '...'
+                        ai_line_details.append({"file": fp, "line": idx + 1, "content": content})
+            except Exception:
+                for idx in sorted(overlap):
+                    ai_line_details.append({"file": fp, "line": idx + 1, "content": ""})
     return {
         "ai_lines": commit_ai,
         "total_added": commit_total,
         "changed_files": len(changed),
         "ai_changed_files": ai_file_count,
+        "ai_line_details": ai_line_details,
     }
 
 
@@ -397,6 +415,14 @@ def process(args=None):
         if commit_stats["total_added"] > 0:
             cp = round(commit_stats["ai_lines"] / commit_stats["total_added"] * 100, 2)
             print("   本 commit AI 占比: %s%%" % cp)
+        details = commit_stats.get("ai_line_details", [])
+        detail_path = os.path.join(project_root, "commit-ai-lines.json")
+        with open(detail_path, 'w', encoding='utf-8') as f:
+            json.dump(details, f, indent=2, ensure_ascii=False)
+        if details:
+            print("   AI 行明细已写入: %s" % detail_path)
+            for d in details:
+                print("   %s:%s | %s" % (d["file"], d["line"], d.get("content", "")[:60]))
     print("✅ AIBOM 已生成: %s" % output_path)
 
     if opts.append_history and os.path.isdir(os.path.join(project_root, ".git")):
