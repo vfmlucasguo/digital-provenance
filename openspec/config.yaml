@@ -1,0 +1,43 @@
+schema: spec-driven
+
+# Project context — shown to AI when creating artifacts and during implementation
+context: |
+  Project: digital-provenance — Ionic/Angular app for AI code provenance tracking
+  Tech stack: Angular 20, Ionic 8, TypeScript, Capacitor 8
+  Source: src/ (business code only; exclude node_modules, config files)
+
+  ## AI Digital Provenance (MUST follow when writing code)
+
+  When generating OR MODIFYING code in src/, you MUST add provenance markers so AIBOM can track AI-generated lines. Markers are detected by scripts/process_aibom.py.
+
+  **CRITICAL**: Apply markers to EVERY file you touch:
+  - **New files**: Wrap new code with @ai-generated-begin/end or add file header marker.
+  - **Existing files**: When you ADD or CHANGE code in existing files (e.g. tabs.page.html, *-routing.module.ts), wrap the added/changed block with @ai-generated-begin/end. Do NOT skip markers in modified existing files.
+
+  **Scope**: Markers only in src/ business code. NEVER add markers to node_modules, package.json, angular.json, tsconfig.json, or plugin configs.
+
+  **Syntax** (use exactly as shown):
+  | Scenario | Syntax | Placement |
+  | Whole file | `// @ai-generated` or `// @generated-ai` | Top of file, in a pure comment line (within first 10 lines) |
+  | Block | `// @ai-generated-begin` ... `// @ai-generated-end` | Wrap the AI-written code block |
+  | Single line | `// @ai-generated` | At end of line (trailing comment) |
+
+  **Example**:
+  ```typescript
+  async processData() {
+    const data = await this.getData();
+    // @ai-generated-begin
+    const result = data.filter(item => item.active && item.score > 80);
+    // @ai-generated-end
+    return result;
+  }
+  ```
+
+  **Path exemption**: Files under paths containing `ai-gen` (e.g. src/app/services/ai-gen/) are auto-detected as whole-file AI; no manual markers needed.
+
+# Per-artifact rules
+rules:
+  tasks:
+    - Each task that involves creating or modifying code MUST remind: "Add @ai-generated markers to ALL affected files (new files AND existing files you modify)"
+    - For tasks that modify existing files (routing, tabs, shared components), include an explicit subtask: "Add @ai-generated-begin/end around the new/changed block in <filename>"
+    - Break implementation into chunks of max ~2 hours

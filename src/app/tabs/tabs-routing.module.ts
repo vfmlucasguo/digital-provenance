@@ -43,6 +43,12 @@ const routes: Routes = [
         path: 'no-ai',
         loadChildren: () => import('../pages/no-ai/no-ai.module').then(m => m.NoAiPageModule)
       },
+      // @ai-generated-begin
+      {
+        path: 'login',
+        loadChildren: () => import('../pages/login/login.module').then(m => m.LoginPageModule)
+      },
+      // @ai-generated-end
       {
         path: '',
         redirectTo: '/tabs/tab1',

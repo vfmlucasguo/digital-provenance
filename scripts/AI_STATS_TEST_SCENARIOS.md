@@ -1,6 +1,6 @@
 # AI 统计测试场景说明
 
-本目录下的示例代码用于验证 `process_aibom.py` 的 AI 统计逻辑。各场景对应 `openspec/AGENTS.md` 中的 AI 数字溯源协议。
+本目录下的示例代码用于验证 `process_aibom.py` 的 AI 统计逻辑。各场景对应项目根目录 `AGENTS.md` 与 `openspec/config.yaml` 中的 AI 数字溯源协议。
 
 ## 测试文件一览
 
@@ -38,10 +38,10 @@ python3 scripts/process_aibom.py
 
 ## 与 AGENTS.md 的对应关系
 
-| AGENTS.md 语法 | process_aibom.py 支持 |
+| AGENTS.md / config 语法 | process_aibom.py 支持 |
 |----------------|------------------------|
 | `// @ai-generated`（头部） | ✅ 前 10 行内 |
 | `// @ai-start` … `// @ai-end` | ⚠️ 需使用 `@ai-generated-begin` / `@ai-generated-end` |
 | `src/app/pages/ai-gen/` 免标 | ✅ 路径含 `ai-gen` 自动整文件 |
 
-> 注意：AGENTS.md 中 `@ai-start`/`@ai-end` 与脚本的 `@ai-generated-begin`/`@ai-generated-end` 不一致，示例采用脚本支持的语法。
+> 注意：当前规则已与脚本对齐，统一使用 `@ai-generated-begin`/`@ai-generated-end`。

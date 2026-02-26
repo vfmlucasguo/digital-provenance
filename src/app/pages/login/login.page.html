@@ -1,0 +1,45 @@
+<!-- @ai-generated-begin -->
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Login</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Sign In</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <form (ngSubmit)="onSubmit()" #loginForm="ngForm">
+        <ion-item>
+          <ion-label position="stacked">Email</ion-label>
+          <ion-input
+            type="email"
+            [(ngModel)]="email"
+            name="email"
+            required
+            email
+            placeholder="you@example.com"
+          ></ion-input>
+        </ion-item>
+        <ion-text color="danger" *ngIf="emailError">
+          <small>{{ emailError }}</small>
+        </ion-text>
+        <ion-item>
+          <ion-label position="stacked">Password</ion-label>
+          <ion-input
+            type="password"
+            [(ngModel)]="password"
+            name="password"
+            placeholder="••••••••"
+          ></ion-input>
+        </ion-item>
+        <ion-button type="submit" expand="block" class="ion-margin-top">
+          Sign In
+        </ion-button>
+      </form>
+    </ion-card-content>
+  </ion-card>
+</ion-content>
+<!-- @ai-generated-end -->
