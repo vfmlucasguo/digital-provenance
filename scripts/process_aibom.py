@@ -49,14 +49,33 @@ def _marker_in_comment(line: str, line_lower: str) -> bool:
     Prevents false positives when the marker appears in string literals or HTML text.
     Supported delimiters: // /* <!-- #
     """
+    line_lower_orig = line.lower()
     for marker in ('@ai-generated', '@generated-ai'):
-        pos = line_lower.find(marker)
+        pos = line_lower_orig.find(marker)
         if pos == -1:
             continue
         before = line[:pos]
         if ('//' in before or '/*' in before or '<!--' in before or
                 before.lstrip().startswith('#') or before.lstrip().startswith('*')):
             return True
+    return False
+
+
+def _is_header_marker_declaration(line: str, line_lower: str) -> bool:
+    """Return True if the marker on this line is an actual whole-file declaration,
+    not descriptive text (e.g. JSDoc describing the marker format).
+    E.g. ' * @ai-generated' -> True; ' * Single line with // @ai-generated at end' -> False.
+    """
+    line_lower_orig = line.lower()
+    for marker in ('@ai-generated', '@generated-ai'):
+        pos = line_lower_orig.find(marker)
+        if pos == -1:
+            continue
+        after = line[pos + len(marker):].strip().rstrip('*/').strip().lower()
+        # Substantial prose after marker (e.g. "at end counts as ai") = descriptive, not declaration
+        if len(after) > 8 and ' ' in after and any(c.isalpha() for c in after):
+            return False
+        return True
     return False
 
 
@@ -97,17 +116,22 @@ def analyze_file(file_path: str, project_root: str = ".") -> dict:
         result["ai_line_indices"] = _all_non_empty_indices()
         return result
 
-    # 2. 整文件：头部(前 N 行) 有 @ai-generated 或 @generated-ai（排除块标记行）
+    # 2. 整文件：头部(前 N 行) 有 @ai-generated 或 @generated-ai（排除块标记、描述性文案、行尾注释）
     for line in lines[:HEADER_LINES]:
         sl = line.strip().lower()
         if '@ai-generated' in sl or '@generated-ai' in sl:
-            # 含 @ai-generated-begin 或 @ai-generated-end 的是块标记，不触发整文件
             if '@ai-generated-begin' not in sl and '@ai-generated-end' not in sl:
-                result["whole_file"] = True
-                result["ai_lines"] = total
-                result["scope"] = "whole"
-                result["ai_line_indices"] = _all_non_empty_indices()
-                return result
+                # 仅纯注释行上的声明触发整文件，排除：1)描述性文字 2)代码+行尾注释（归 inline 处理）
+                is_comment_line = (
+                    sl.startswith('//') or sl.startswith('#') or
+                    sl.startswith('*') or sl.startswith('<!--') or sl.startswith('/*')
+                )
+                if is_comment_line and _is_header_marker_declaration(line, sl):
+                    result["whole_file"] = True
+                    result["ai_lines"] = total
+                    result["scope"] = "whole"
+                    result["ai_line_indices"] = _all_non_empty_indices()
+                    return result
 
     # 3. 部分片段：行级 + 块级标记
     ai_line_indices = set()
@@ -148,13 +172,16 @@ def analyze_file(file_path: str, project_root: str = ".") -> dict:
             i += 1
             continue
 
-        # 纯注释行上的 standalone 标记：标记「下一块」到缩进回退
+        # 纯注释行上的 standalone 标记：标记「下一块」到缩进回退（排除描述性文案）
         is_comment = (
             s_lower.startswith('//') or s_lower.startswith('#') or
             s_lower.startswith('*') or s_lower.startswith('<!--')
         )
         if is_comment and ('@ai-generated' in s_lower or '@generated-ai' in s_lower):
             if '@ai-generated-end' in s_lower or '@ai-generated-begin' in s_lower:
+                i += 1
+                continue
+            if not _is_header_marker_declaration(line, s_lower):
                 i += 1
                 continue
             # 标记下一块：从下一非空行起，直到缩进严格小于注释行
