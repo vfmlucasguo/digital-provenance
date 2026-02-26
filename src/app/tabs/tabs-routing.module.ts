@@ -20,6 +20,30 @@ const routes: Routes = [
         loadChildren: () => import('../tab3/tab3.module').then(m => m.Tab3PageModule)
       },
       {
+        path: 'ai-demo',
+        loadChildren: () => import('../pages/ai-demo-list/ai-demo-list.module').then(m => m.AiDemoListPageModule)
+      },
+      {
+        path: 'whole-by-path',
+        loadChildren: () => import('../pages/whole-by-path/whole-by-path.module').then(m => m.WholeByPathPageModule)
+      },
+      {
+        path: 'header-whole',
+        loadChildren: () => import('../pages/header-whole/header-whole.module').then(m => m.HeaderWholePageModule)
+      },
+      {
+        path: 'block-partial',
+        loadChildren: () => import('../pages/block-partial/block-partial.module').then(m => m.BlockPartialPageModule)
+      },
+      {
+        path: 'inline-partial',
+        loadChildren: () => import('../pages/inline-partial/inline-partial.module').then(m => m.InlinePartialPageModule)
+      },
+      {
+        path: 'no-ai',
+        loadChildren: () => import('../pages/no-ai/no-ai.module').then(m => m.NoAiPageModule)
+      },
+      {
         path: '',
         redirectTo: '/tabs/tab1',
         pathMatch: 'full'
