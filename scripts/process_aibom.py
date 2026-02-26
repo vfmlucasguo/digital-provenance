@@ -55,9 +55,42 @@ def _marker_in_comment(line: str, line_lower: str) -> bool:
         if pos == -1:
             continue
         before = line[:pos]
+
+        # Exclude: marker inside string literal (odd number of quotes before = unclosed string)
+        # Simple heuristic: does not handle escaped quotes
+        n_single = before.count("'")
+        n_double = before.count('"')
+        if n_single % 2 == 1 or n_double % 2 == 1:
+            continue
+
+        # Exclude: marker in HTML element text content (between > and <)
+        if '>' in before and '<' in line[pos:]:
+            seg_before_gt = before.rpartition('>')[-1]
+            seg_after_lt = line[pos:].partition('<')[0]
+            if marker.lower() in (seg_before_gt + seg_after_lt).lower():
+                continue
+
         if ('//' in before or '/*' in before or '<!--' in before or
                 before.lstrip().startswith('#') or before.lstrip().startswith('*')):
             return True
+    return False
+
+
+def _marker_in_string_or_html(line: str, marker_substr: str = '@ai-generated') -> bool:
+    """Return True if marker on this line is inside a string literal or HTML text content."""
+    line_lower = line.lower()
+    pos = line_lower.find(marker_substr)
+    if pos == -1:
+        pos = line_lower.find('@generated-ai')
+        if pos == -1:
+            return False
+        marker_substr = '@generated-ai'
+    before = line[:pos]
+
+    if before.count("'") % 2 == 1 or before.count('"') % 2 == 1:
+        return True
+    if '>' in before and '<' in line[pos:]:
+        return True
     return False
 
 
@@ -149,15 +182,15 @@ def analyze_file(file_path: str, project_root: str = ".") -> dict:
             i += 1
             continue
 
-        # 块结束
-        if '@ai-generated-end' in s_lower:
+        # 块结束（排除字符串/HTML 中的标记）
+        if '@ai-generated-end' in s_lower and not _marker_in_string_or_html(line, '@ai-generated-end'):
             in_block = False
             block_indent = -1
             i += 1
             continue
 
-        # 块开始
-        if '@ai-generated-begin' in s_lower:
+        # 块开始（排除字符串/HTML 中的标记）
+        if '@ai-generated-begin' in s_lower and not _marker_in_string_or_html(line, '@ai-generated-begin'):
             in_block = True
             block_indent = indent
             i += 1
