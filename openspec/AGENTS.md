@@ -737,24 +737,24 @@ When user input matches any trigger pattern below, **MUST** read the correspondi
 ### A. 标注原则与范围限制 (重要)
 - **仅限业务代码**：标记仅允许出现在 `src/` 目录下的业务源码中。
 - **严禁修改插件/库**：**绝对禁止**在 `node_modules`、外部 Plugins、`package.json` 或环境配置文件（如 `angular.json`, `tsconfig.json`）中添加任何溯源标记。
-- **免标路径**：位于 `src/app/pages/ai-gen/` 目录下的文件会被系统自动识别，无需手动添加注释。
+- **免标路径**：路径中含 `ai-gen` 的文件（如 `src/app/services/ai-gen/`、`src/app/pages/ai-gen/`）会被系统自动识别为整文件 AI，无需手动添加注释。
 
 ### B. 标注语法执行
-请根据代码改动的规模选择合适的标记方式：
+请根据代码改动的规模选择合适的标记方式（与 `process_aibom.py` 统计规则一致）：
 
 | 场景 | 标记语法 | 放置位置 |
 | :--- | :--- | :--- |
-| **全文件 AI 生成** | `// @ai-generated` | 文件最顶部（前 5 行内） |
-| **局部代码块修改** | `// @ai-start` <br> `[AI 实现的代码]` <br> `// @ai-end` | 包裹新增或修改的功能逻辑 |
+| **全文件 AI 生成** | `// @ai-generated` 或 `// @generated-ai` | 文件最顶部纯注释行（前 10 行内） |
+| **局部代码块修改** | `// @ai-generated-begin` <br> `[AI 实现的代码]` <br> `// @ai-generated-end` | 包裹新增或修改的功能逻辑 |
 
 ### C. 示例参考
 **局部逻辑修改示例：**
 ```typescript
 async processData() {
   const data = await this.getData();
-  // @ai-start
+  // @ai-generated-begin
   // AI 根据 OpenSpec 提案实现的过滤逻辑
   const result = data.filter(item => item.active && item.score > 80);
-  // @ai-end
+  // @ai-generated-end
   return result;
 }
