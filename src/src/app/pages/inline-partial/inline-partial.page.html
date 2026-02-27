@@ -1,0 +1,19 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/tabs/ai-demo"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Inline Partial</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Trailing // @ai-generated</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <p>Trimmed: {{ trimmed }}</p>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

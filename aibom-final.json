@@ -28,47 +28,47 @@
       },
       {
         "name": "stats:project:src_total_lines",
-        "value": "141"
+        "value": "1293"
       },
       {
         "name": "stats:project:ai_total_lines",
-        "value": "0"
+        "value": "123"
       },
       {
         "name": "stats:project:ai_whole_file_lines",
-        "value": "0"
+        "value": "11"
       },
       {
         "name": "stats:project:ai_partial_lines",
-        "value": "0"
+        "value": "112"
       },
       {
         "name": "stats:project:ai_percentage",
-        "value": "0.0%"
+        "value": "9.51%"
       },
       {
         "name": "stats:project:whole_files_count",
-        "value": "0"
+        "value": "1"
       },
       {
         "name": "stats:project:partial_files_count",
-        "value": "0"
-      },
-      {
-        "name": "stats:project:src_files_scanned",
         "value": "9"
       },
       {
+        "name": "stats:project:src_files_scanned",
+        "value": "93"
+      },
+      {
         "name": "stats:src_total_lines",
-        "value": "141"
+        "value": "1293"
       },
       {
         "name": "stats:ai_total_lines",
-        "value": "0"
+        "value": "123"
       },
       {
         "name": "stats:ai_percentage",
-        "value": "0.0%"
+        "value": "9.51%"
       },
       {
         "name": "stats:services:src_total_lines",
@@ -88,7 +88,7 @@
       },
       {
         "name": "build:scan_time",
-        "value": "2026-02-27T11:26:07.841332"
+        "value": "2026-02-27T11:28:51.976862"
       }
     ]
   },
@@ -3185,6 +3185,186 @@
         {
           "alg": "SHA-256",
           "content": "deaa172a59caa37a07bf758bfa8bcc3a65a0d7ac40722b45b18a27740f724dcb"
+        }
+      ]
+    },
+    {
+      "type": "file",
+      "name": "src/src/app/pages/login/login-routing.module.ts",
+      "properties": [
+        {
+          "name": "ai:generated",
+          "value": "true"
+        },
+        {
+          "name": "ai:scope",
+          "value": "partial"
+        },
+        {
+          "name": "ai:lines",
+          "value": "9"
+        }
+      ]
+    },
+    {
+      "type": "file",
+      "name": "src/src/app/pages/login/login.module.ts",
+      "properties": [
+        {
+          "name": "ai:generated",
+          "value": "true"
+        },
+        {
+          "name": "ai:scope",
+          "value": "partial"
+        },
+        {
+          "name": "ai:lines",
+          "value": "16"
+        }
+      ]
+    },
+    {
+      "type": "file",
+      "name": "src/src/app/pages/login/login.page.html",
+      "properties": [
+        {
+          "name": "ai:generated",
+          "value": "true"
+        },
+        {
+          "name": "ai:scope",
+          "value": "partial"
+        },
+        {
+          "name": "ai:lines",
+          "value": "42"
+        }
+      ]
+    },
+    {
+      "type": "file",
+      "name": "src/src/app/pages/login/login.page.scss",
+      "properties": [
+        {
+          "name": "ai:generated",
+          "value": "true"
+        },
+        {
+          "name": "ai:scope",
+          "value": "partial"
+        },
+        {
+          "name": "ai:lines",
+          "value": "3"
+        }
+      ]
+    },
+    {
+      "type": "file",
+      "name": "src/src/app/pages/login/login.page.ts",
+      "properties": [
+        {
+          "name": "ai:generated",
+          "value": "true"
+        },
+        {
+          "name": "ai:scope",
+          "value": "partial"
+        },
+        {
+          "name": "ai:lines",
+          "value": "31"
+        }
+      ]
+    },
+    {
+      "type": "file",
+      "name": "src/src/app/services/ai-gen/whole-by-path.service.ts",
+      "properties": [
+        {
+          "name": "ai:generated",
+          "value": "true"
+        },
+        {
+          "name": "ai:scope",
+          "value": "whole"
+        },
+        {
+          "name": "ai:lines",
+          "value": "11"
+        }
+      ]
+    },
+    {
+      "type": "file",
+      "name": "src/src/app/services/block-partial.service.ts",
+      "properties": [
+        {
+          "name": "ai:generated",
+          "value": "true"
+        },
+        {
+          "name": "ai:scope",
+          "value": "partial"
+        },
+        {
+          "name": "ai:lines",
+          "value": "2"
+        }
+      ]
+    },
+    {
+      "type": "file",
+      "name": "src/src/app/services/inline-partial.service.ts",
+      "properties": [
+        {
+          "name": "ai:generated",
+          "value": "true"
+        },
+        {
+          "name": "ai:scope",
+          "value": "partial"
+        },
+        {
+          "name": "ai:lines",
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "type": "file",
+      "name": "src/src/app/tabs/tabs-routing.module.ts",
+      "properties": [
+        {
+          "name": "ai:generated",
+          "value": "true"
+        },
+        {
+          "name": "ai:scope",
+          "value": "partial"
+        },
+        {
+          "name": "ai:lines",
+          "value": "4"
+        }
+      ]
+    },
+    {
+      "type": "file",
+      "name": "src/src/app/tabs/tabs.page.html",
+      "properties": [
+        {
+          "name": "ai:generated",
+          "value": "true"
+        },
+        {
+          "name": "ai:scope",
+          "value": "partial"
+        },
+        {
+          "name": "ai:lines",
+          "value": "4"
         }
       ]
     }
