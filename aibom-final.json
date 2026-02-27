@@ -28,11 +28,11 @@
       },
       {
         "name": "stats:project:src_total_lines",
-        "value": "1293"
+        "value": "1364"
       },
       {
         "name": "stats:project:ai_total_lines",
-        "value": "123"
+        "value": "182"
       },
       {
         "name": "stats:project:ai_whole_file_lines",
@@ -40,11 +40,11 @@
       },
       {
         "name": "stats:project:ai_partial_lines",
-        "value": "112"
+        "value": "171"
       },
       {
         "name": "stats:project:ai_percentage",
-        "value": "9.51%"
+        "value": "13.34%"
       },
       {
         "name": "stats:project:whole_files_count",
@@ -52,23 +52,23 @@
       },
       {
         "name": "stats:project:partial_files_count",
-        "value": "9"
+        "value": "15"
       },
       {
         "name": "stats:project:src_files_scanned",
-        "value": "93"
+        "value": "98"
       },
       {
         "name": "stats:src_total_lines",
-        "value": "1293"
+        "value": "1364"
       },
       {
         "name": "stats:ai_total_lines",
-        "value": "123"
+        "value": "182"
       },
       {
         "name": "stats:ai_percentage",
-        "value": "9.51%"
+        "value": "13.34%"
       },
       {
         "name": "stats:services:src_total_lines",
@@ -88,7 +88,7 @@
       },
       {
         "name": "build:scan_time",
-        "value": "2026-02-27T11:28:51.976862"
+        "value": "2026-02-27T13:30:16.132125"
       }
     ]
   },
@@ -3280,6 +3280,96 @@
     },
     {
       "type": "file",
+      "name": "src/src/app/pages/settings/settings-routing.module.ts",
+      "properties": [
+        {
+          "name": "ai:generated",
+          "value": "true"
+        },
+        {
+          "name": "ai:scope",
+          "value": "partial"
+        },
+        {
+          "name": "ai:lines",
+          "value": "9"
+        }
+      ]
+    },
+    {
+      "type": "file",
+      "name": "src/src/app/pages/settings/settings.module.ts",
+      "properties": [
+        {
+          "name": "ai:generated",
+          "value": "true"
+        },
+        {
+          "name": "ai:scope",
+          "value": "partial"
+        },
+        {
+          "name": "ai:lines",
+          "value": "14"
+        }
+      ]
+    },
+    {
+      "type": "file",
+      "name": "src/src/app/pages/settings/settings.page.html",
+      "properties": [
+        {
+          "name": "ai:generated",
+          "value": "true"
+        },
+        {
+          "name": "ai:scope",
+          "value": "partial"
+        },
+        {
+          "name": "ai:lines",
+          "value": "16"
+        }
+      ]
+    },
+    {
+      "type": "file",
+      "name": "src/src/app/pages/settings/settings.page.scss",
+      "properties": [
+        {
+          "name": "ai:generated",
+          "value": "true"
+        },
+        {
+          "name": "ai:scope",
+          "value": "partial"
+        },
+        {
+          "name": "ai:lines",
+          "value": "3"
+        }
+      ]
+    },
+    {
+      "type": "file",
+      "name": "src/src/app/pages/settings/settings.page.ts",
+      "properties": [
+        {
+          "name": "ai:generated",
+          "value": "true"
+        },
+        {
+          "name": "ai:scope",
+          "value": "partial"
+        },
+        {
+          "name": "ai:lines",
+          "value": "10"
+        }
+      ]
+    },
+    {
+      "type": "file",
       "name": "src/src/app/services/ai-gen/whole-by-path.service.ts",
       "properties": [
         {
@@ -3334,6 +3424,24 @@
     },
     {
       "type": "file",
+      "name": "src/src/app/tab1/tab1.page.html",
+      "properties": [
+        {
+          "name": "ai:generated",
+          "value": "true"
+        },
+        {
+          "name": "ai:scope",
+          "value": "partial"
+        },
+        {
+          "name": "ai:lines",
+          "value": "3"
+        }
+      ]
+    },
+    {
+      "type": "file",
       "name": "src/src/app/tabs/tabs-routing.module.ts",
       "properties": [
         {
@@ -3346,7 +3454,7 @@
         },
         {
           "name": "ai:lines",
-          "value": "4"
+          "value": "8"
         }
       ]
     },
