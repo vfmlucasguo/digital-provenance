@@ -107,7 +107,6 @@ jobs:
         echo "" >> $GITHUB_STEP_SUMMARY
         echo "### 📊 Project Total (src/ full range)" >> $GITHUB_STEP_SUMMARY
         echo "- **Total lines**: $TOTAL_LINES | **AI lines**: $AI_LINES | **Penetration rate**: $AI_PCT" >> $GITHUB_STEP_SUMMARY
-        echo "- **Dependencies**: $COMPONENT_COUNT" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
         echo "### 📊 src/app/services (services layer)" >> $GITHUB_STEP_SUMMARY
         echo "- **Total lines**: $SERVICES_TOTAL | **AI lines**: $SERVICES_AI | **Penetration rate**: $SERVICES_PCT | **Files**: $SERVICES_FILES" >> $GITHUB_STEP_SUMMARY
