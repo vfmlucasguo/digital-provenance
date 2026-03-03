@@ -1,9 +1,8 @@
-name: AI Digital Provenance (Full Repository & Simplified)
+name: AI Digital Provenance
 
 on:
   push:
     branches: [ main, develop ]
-    # Path filter removed; watches all file changes under project root
     paths:
       - '**'
   pull_request:
@@ -29,22 +28,7 @@ jobs:
       with:
         python-version: '3.9'
 
-    # 2. Install core tools
-    - name: Install Syft (SBOM Generator)
-      run: |
-        curl -sSfL https://raw.githubusercontent.com/anchore/syft/main/install.sh | sh -s -- -b /usr/local/bin
-        echo "📦 Syft installed for SBOM generation"
-
-    # 3. AI digital provenance core flow
-    - name: Generate Base SBOM
-      run: |
-        echo "📦 Generating Software Bill of Materials..."
-        # Use Syft to scan project and generate base JSON manifest
-        syft . -o cyclonedx-json > base-sbom.json
-        COMPONENT_COUNT=$(jq '.components | length' base-sbom.json)
-        echo "✅ SBOM generated with $COMPONENT_COUNT components"
-        echo "COMPONENT_COUNT=$COMPONENT_COUNT" >> $GITHUB_ENV
-
+    # 2. AI digital provenance core flow
     - name: AI Code Detection & Full Range Statistics
       env:
         BASE_REF: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || 'HEAD~1' }}
@@ -59,7 +43,6 @@ jobs:
         COMMIT_ADDED=$(jq -r '.metadata.properties[] | select(.name=="stats:commit:total_added") | .value // "0"' aibom-final.json)
         COMMIT_PCT=$(jq -r '.metadata.properties[] | select(.name=="stats:commit:ai_percentage") | .value // "0"' aibom-final.json)
         SCAN_TIME=$(jq -r '[.metadata.properties[]? | select(.name=="build:scan_time") | .value][0] // "N/A"' aibom-final.json 2>/dev/null || echo "N/A")
-        SBOM_TIMESTAMP=$(jq -r '.metadata.timestamp // "N/A"' base-sbom.json 2>/dev/null || echo "N/A")
         SERVICES_TOTAL=$(jq -r '[.metadata.properties[]? | select(.name=="stats:services:src_total_lines") | .value][0] // "0"' aibom-final.json 2>/dev/null || echo "0")
         SERVICES_AI=$(jq -r '[.metadata.properties[]? | select(.name=="stats:services:ai_total_lines") | .value][0] // "0"' aibom-final.json 2>/dev/null || echo "0")
         SERVICES_PCT=$(jq -r '[.metadata.properties[]? | select(.name=="stats:services:ai_percentage") | .value][0] // "0"' aibom-final.json 2>/dev/null || echo "0")
@@ -71,7 +54,6 @@ jobs:
 
         echo "AI_LINES=$AI_LINES" >> $GITHUB_ENV
         echo "SCAN_TIME=$SCAN_TIME" >> $GITHUB_ENV
-        echo "SBOM_TIMESTAMP=$SBOM_TIMESTAMP" >> $GITHUB_ENV
         echo "AI_PCT=$AI_PCT" >> $GITHUB_ENV
         echo "TOTAL_LINES=$TOTAL_LINES" >> $GITHUB_ENV
         echo "COMMIT_AI=$COMMIT_AI" >> $GITHUB_ENV
@@ -82,7 +64,7 @@ jobs:
         echo "SERVICES_PCT=$SERVICES_PCT" >> $GITHUB_ENV
         echo "SERVICES_FILES=$SERVICES_FILES" >> $GITHUB_ENV
 
-    # 4. Upload AI provenance artifact
+    # 3. Upload AI provenance artifact
     - name: Upload AI Provenance Artifact
       uses: actions/upload-artifact@v4
       with:
@@ -92,7 +74,7 @@ jobs:
           commit-ai-lines.json
         retention-days: 30
 
-    # 5. Generate visual summary in GitHub Actions UI
+    # 4. Generate visual summary in GitHub Actions UI
     - name: Generate AI Provenance Summary
       env:
         RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
@@ -102,7 +84,7 @@ jobs:
         echo "## 🤖 AI Digital Provenance Report" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
         echo "### ⏱️ Timestamps" >> $GITHUB_STEP_SUMMARY
-        echo "- **AI scan time**: \`${SCAN_TIME}\` | **SBOM generated**: \`${SBOM_TIMESTAMP}\`" >> $GITHUB_STEP_SUMMARY
+        echo "- **AI scan time**: \`${SCAN_TIME}\`" >> $GITHUB_STEP_SUMMARY
         echo "- **Summary generated**: \`${SUMMARY_TIME}\` (UTC) | [Workflow run #${{ github.run_number }}]($RUN_URL)" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
         echo "### 📊 Project Total (src/ full range)" >> $GITHUB_STEP_SUMMARY
@@ -130,7 +112,7 @@ jobs:
         echo "" >> $GITHUB_STEP_SUMMARY
         echo "*🎯 AI Digital Provenance - Code transparency and traceability*" >> $GITHUB_STEP_SUMMARY
 
-    # 6. AI change analysis for Pull Request
+    # 5. AI change analysis for Pull Request
     - name: Comment PR with AI Analysis
       if: github.event_name == 'pull_request'
       uses: actions/github-script@v7

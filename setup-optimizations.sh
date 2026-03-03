@@ -99,45 +99,15 @@ echo
 echo "⚙️  Setting up environment configuration..."
 if [ ! -f ".env" ] && [ -f ".env.example" ]; then
     cp ".env.example" ".env"
-    print_warning "Created .env from template - PLEASE UPDATE THE COSIGN_PASSWORD!"
-    print_info "Edit .env file and set a secure COSIGN_PASSWORD"
+    print_status "Created .env from template"
+    print_info "Edit .env file to customize settings if needed"
 elif [ -f ".env" ]; then
     print_info ".env file already exists"
 else
     print_warning "No .env template found, please create manually"
 fi
 
-# 6. Generate new secure keys if requested
-echo
-echo "🔑 Key Management"
-read -p "Do you want to generate new secure Cosign keys? (y/N): " -n 1 -r
-echo
-if [[ $REPLY =~ ^[Yy]$ ]]; then
-    print_info "Generating new Cosign key pair..."
-
-    # Remove old keys
-    rm -f cosign.key cosign.pub
-
-    # Generate new keys with user-provided password
-    echo "Please enter a secure password for your new Cosign key:"
-    read -s COSIGN_PASSWORD
-    echo
-
-    COSIGN_PASSWORD="$COSIGN_PASSWORD" cosign generate-key-pair
-
-    if [ -f "cosign.key" ] && [ -f "cosign.pub" ]; then
-        print_status "New Cosign key pair generated"
-        print_warning "Please update COSIGN_PASSWORD in .env file"
-        print_info "Public key (cosign.pub) should be committed to git"
-        print_info "Private key (cosign.key) is automatically gitignored"
-    else
-        print_error "Failed to generate keys"
-    fi
-else
-    print_info "Keeping existing keys"
-fi
-
-# 7. Setup utility scripts
+# 6. Setup utility scripts
 echo
 echo "🛠️  Setting up utility scripts..."
 chmod +x scripts/*.py 2>/dev/null || true
@@ -147,36 +117,14 @@ cat > scripts/manual-provenance.sh << 'EOF'
 #!/bin/bash
 # Manual provenance generation (for testing)
 echo "🚀 Running manual provenance generation..."
-syft . -o cyclonedx-json > base-sbom.json
 python3 scripts/process_aibom.py
-COSIGN_PASSWORD="${COSIGN_PASSWORD}" cosign sign-blob --key cosign.key --bundle aibom.sigstore.json aibom-final.json
-cosign verify-blob --key cosign.pub --bundle aibom.sigstore.json aibom-final.json
 echo "✅ Manual provenance generation completed"
 EOF
 
-cat > scripts/verify-provenance.sh << 'EOF'
-#!/bin/bash
-# Verify existing provenance files
-echo "🔍 Verifying provenance files..."
-
-if [ ! -f "aibom-final.json" ]; then
-    echo "❌ No AIBOM file found"
-    exit 1
-fi
-
-if [ ! -f "aibom.sigstore.json" ]; then
-    echo "❌ No signature bundle found"
-    exit 1
-fi
-
-cosign verify-blob --key cosign.pub --bundle aibom.sigstore.json aibom-final.json
-echo "✅ Provenance verification successful"
-EOF
-
-chmod +x scripts/manual-provenance.sh scripts/verify-provenance.sh
+chmod +x scripts/manual-provenance.sh
 print_status "Utility scripts created"
 
-# 8. Setup GitHub Actions (if .github directory exists or user wants it)
+# 7. Setup GitHub Actions (if .github directory exists or user wants it)
 echo
 echo "🔄 CI/CD Integration"
 if [ -d ".github" ] || [ -d ".github/workflows" ]; then
@@ -186,7 +134,6 @@ if [ -d ".github" ] || [ -d ".github/workflows" ]; then
         mkdir -p .github/workflows
         if [ -f ".github/workflows/digital-provenance.yml" ]; then
             print_status "GitHub Actions workflow ready"
-            print_info "Don't forget to set COSIGN_PRIVATE_KEY and COSIGN_PASSWORD secrets in GitHub"
         else
             print_warning "GitHub Actions workflow template not found"
         fi
@@ -195,7 +142,7 @@ else
     print_info "No .github directory found, skipping CI/CD setup"
 fi
 
-# 9. Commit provenance files to git
+# 8. Commit provenance files to git
 echo
 echo "📝 Git Integration"
 read -p "Add provenance files to git tracking? (Y/n): " -n 1 -r
@@ -206,25 +153,20 @@ if [[ ! $REPLY =~ ^[Nn]$ ]]; then
         cat >> .gitignore << 'EOF'
 
 # Track provenance files
-!base-sbom.json
 !aibom-final.json
-!aibom.sigstore.json
 EOF
     fi
 
     # Add files if they exist
     git add .gitignore 2>/dev/null || true
-    [ -f "base-sbom.json" ] && git add base-sbom.json
     [ -f "aibom-final.json" ] && git add aibom-final.json
-    [ -f "aibom.sigstore.json" ] && git add aibom.sigstore.json
-    [ -f "cosign.pub" ] && git add cosign.pub
 
     print_status "Provenance files added to git tracking"
 else
     print_info "Provenance files will remain untracked"
 fi
 
-# 10. Performance test
+# 9. Performance test
 echo
 echo "⚡ Performance Test"
 read -p "Run a performance test of the optimized workflow? (y/N): " -n 1 -r
@@ -252,28 +194,25 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
     fi
 fi
 
-# 11. Final summary and recommendations
+# 10. Final summary and recommendations
 echo
 echo "🎉 Optimization Setup Complete!"
 echo "================================"
 echo
 print_status "Applied optimizations:"
 echo "  • Security hardening (password management)"
-echo "  • Performance improvements (SBOM caching)"
 echo "  • Enhanced AI detection"
 echo "  • Automated git integration"
 echo "  • CI/CD workflow templates"
 echo "  • Utility scripts for maintenance"
 echo
 print_warning "Next steps:"
-echo "  1. Update COSIGN_PASSWORD in .env file"
-echo "  2. Test the workflow: git commit -m 'test optimized provenance'"
-echo "  3. Setup GitHub secrets for CI/CD (if using)"
-echo "  4. Review and customize .env settings"
+echo "  1. Test the workflow: git commit -m 'test optimized provenance'"
+echo "  2. Review and customize .env settings"
 echo
 print_info "Useful commands:"
-echo "  • Test provenance: ./scripts/manual-provenance.sh"
-echo "  • Verify signatures: ./scripts/verify-provenance.sh"
-echo "  • Compare SBOMs: python3 scripts/sbom_diff.py old.json new.json"
+echo "  • Run AI stats: python3 scripts/process_aibom.py"
+echo "  • Run AI stats + commit diff: python3 scripts/process_aibom.py --commit"
+echo "  • Quick test: ./scripts/manual-provenance.sh"
 echo
 print_status "Your digital provenance system is now optimized! 🚀"

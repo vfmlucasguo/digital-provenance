@@ -1,6 +1,9 @@
 """
 AIBOM 全量统计脚本：支持整文件 + 部分代码片段 + 当前提交统计
 
+不依赖 Syft / base-sbom.json，直接扫描 src/ 生成 AIBOM。
+详见: scripts/AI_STATS_TEST_SCENARIOS.md
+
 ## 支持的标注方式
 
 1. **整文件 - 路径**: 路径含 `ai-gen` → 整个文件计为 AI
