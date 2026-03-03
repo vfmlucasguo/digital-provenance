@@ -52,6 +52,10 @@ const routes: Routes = [
         path: 'settings',
         loadChildren: () => import('../pages/settings/settings.module').then(m => m.SettingsPageModule)
       },
+      {
+        path: 'features',
+        loadChildren: () => import('../pages/feature-list/feature-list.module').then(m => m.FeatureListPageModule)
+      },
       // @ai-generated-end
       {
         path: '',
